@@ -12,18 +12,19 @@ usuarios_creados = []
 def seed_personas_usuarios(cantidad=100_000):
     print(f"Generando {cantidad} personas y usuarios mayores de edad...")
     for _ in range(cantidad):
+        nombre=fake.first_name(),
         fecha_nacimiento = fake.date_of_birth(minimum_age=18, maximum_age=70)
         persona = Persona.objects.create(
-            nombre=fake.first_name(),
+            nombre=nombre,
             primer_apellido=fake.last_name(),
             segundo_apellido=fake.last_name(),
             genero=random.choice(['M', 'F', 'O']),
-            documento_identidad=get_random_string(10),
             fecha_nacimiento=fecha_nacimiento,
             tipo="usuario"
         )
         usuario = Usuario.objects.create(
             persona=persona,
+            usuario=nombre+fecha_nacimiento,
             correo_electronico=fake.unique.email(),
             telefono=fake.phone_number(),
             contrasena_hash=get_random_string(32),

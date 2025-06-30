@@ -17,7 +17,6 @@ class Persona(models.Model):
     primer_apellido = models.CharField(max_length=100)
     segundo_apellido = models.CharField(max_length=100, blank=True, null=True)
     genero = models.CharField(max_length=1, choices=GENERO_CHOICES)
-    documento_identidad = models.CharField(max_length=20, unique=True)
     fecha_nacimiento = models.DateField()
     tipo = models.CharField(max_length=11, choices=TIPO_CHOICES)
     

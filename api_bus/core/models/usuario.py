@@ -9,8 +9,9 @@ class Usuario(models.Model):
     ]
     
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE, related_name='usuario')
+    usuario = models.CharField(max_length=50)
     correo_electronico = models.EmailField(unique=True)
-    telefono = models.CharField(max_length=15)
+    telefono = models.CharField(max_length=25)
     contrasena_hash = models.CharField(max_length=128)
     estado = models.CharField(max_length=8, choices=ESTADO_CHOICES, default='activo')
     fecha_registro = models.DateTimeField(auto_now_add=True)
