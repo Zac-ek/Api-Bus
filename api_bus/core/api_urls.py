@@ -8,4 +8,8 @@ urlpatterns = [
     path('rutas/', include('core.urls.ruta_urls')),
     path('horarios/', include('core.urls.horario_urls')),
     path('boletos/', include('core.urls.boleto_urls')),
+    path('', include('core.urls.url')),
+    path('', include('core.urls.characters_urls')),
+    path('', include('core.urls.country_urls'))
+
 ]

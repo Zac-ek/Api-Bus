@@ -6,7 +6,7 @@ import random
 
 fake = Faker()
 
-def seed_trabajadores(cantidad=500):
+def seed_trabajadores(cantidad=250):
     print(f"Generando {cantidad} trabajadores...")
     for _ in range(cantidad):
         fecha_nacimiento = fake.date_of_birth(minimum_age=25, maximum_age=60)

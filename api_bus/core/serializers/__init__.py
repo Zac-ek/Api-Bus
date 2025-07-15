@@ -5,6 +5,7 @@ from .autobus_serializer import AutobusSerializer
 from .ruta_serializer import RutaSerializer
 from .horario_serializer import HorarioSerializer
 from .boleto_serializer import BoletoSerializer
+from .serializer import CustomTokenObtainPairSerializer
 
 __all__ = [
     'PersonaSerializer',
@@ -13,5 +14,6 @@ __all__ = [
     'AutobusSerializer',
     'RutaSerializer',
     'HorarioSerializer',
-    'BoletoSerializer'
+    'BoletoSerializer',
+    'CustomTokenObtainPairSerializer'
 ]

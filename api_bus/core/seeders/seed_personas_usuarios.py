@@ -9,7 +9,7 @@ fake = Faker()
 personas_creadas = []
 usuarios_creados = []
 
-def seed_personas_usuarios(cantidad=100_000):
+def seed_personas_usuarios(cantidad=100):
     print(f"Generando {cantidad} personas y usuarios mayores de edad...")
     for _ in range(cantidad):
         nombre=fake.first_name(),

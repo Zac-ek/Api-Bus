@@ -8,7 +8,7 @@ fake = Faker()
 rutas_creadas = []
 horarios_creados = []
 
-def seed_rutas_horarios(cantidad_rutas=200, horarios_por_ruta=3):
+def seed_rutas_horarios(cantidad_rutas=100, horarios_por_ruta=3):
     print(f"Generando {cantidad_rutas} rutas y horarios asociados...")
     autobuses = get_autobuses_creados()
     dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
