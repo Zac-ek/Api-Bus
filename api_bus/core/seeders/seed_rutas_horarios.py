@@ -2,6 +2,7 @@ from core.models import Ruta, Horario
 from .seed_autobuses import get_autobuses_creados
 from faker import Faker
 import random
+from datetime import timedelta
 
 fake = Faker()
 
@@ -19,7 +20,7 @@ def seed_rutas_horarios(cantidad_rutas=100, horarios_por_ruta=3):
             punto_inicio=fake.city(),
             punto_final=fake.city(),
             distancia_km=round(random.uniform(5, 100), 2),
-            tiempo_estimado=random.randint(15, 120),
+            tiempo_estimado=timedelta(minutes=random.randint(15, 120)),
             autobus_asignado=random.choice(autobuses),
             activo=True
         )

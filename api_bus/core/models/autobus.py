@@ -12,7 +12,7 @@ class Autobus(models.Model):
     modelo = models.CharField(max_length=50)
     anio = models.PositiveIntegerField()
     capacidad = models.PositiveIntegerField()
-    estado = models.CharField(max_length=15, choices=ESTADO_CHOICES, default='activo')
+    estado = models.CharField(max_length=30, choices=ESTADO_CHOICES, default='activo')
     conductor = models.ForeignKey(Trabajador, on_delete=models.SET_NULL, null=True, blank=True, limit_choices_to={'puesto': 'conductor'})
     
     def __str__(self):
