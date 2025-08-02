@@ -19,6 +19,8 @@ class Persona(models.Model):
     genero = models.CharField(max_length=1, choices=GENERO_CHOICES)
     fecha_nacimiento = models.DateField()
     tipo = models.CharField(max_length=11, choices=TIPO_CHOICES)
+    documento_identidad = models.CharField(max_length=20)
+
     
     def __str__(self):
         return f"{self.nombre} {self.primer_apellido}"

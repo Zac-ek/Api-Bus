@@ -6,7 +6,7 @@ import random
 
 fake = Faker()
 
-def seed_boletos(cantidad=1_000):
+def seed_boletos(cantidad=100):
     print(f"Generando {cantidad:,} boletos...")
     usuarios = get_usuarios_creados()
     rutas = get_rutas_creadas()
