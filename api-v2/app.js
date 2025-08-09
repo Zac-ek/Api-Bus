@@ -1,32 +1,43 @@
+// app.js
 import express from 'express';
 import sequelize, { testConnection } from './config/db.js';
-
-// ... (otros imports)
+import { ensureDatabase } from './config/ensureDb.js'; // opcional
+import './models/index.js'; // IMPORTANTE: registra modelos y asociaciones
 
 const app = express();
-const PORT = process.env.APP_PORT || 3000;  // Usar variable de entorno
+const PORT = process.env.APP_PORT || 3000;
 
-// ... (configuración de middleware y rutas)
+// middlewares
+app.use(express.json());
 
-// Iniciar servidor después de probar la conexión
+// rutas (ejemplo)
+// import personaRoutes from './routes/persona.routes.js';
+// app.use('/api/personas', personaRoutes);
+
 const startServer = async () => {
-  const isDbConnected = await testConnection();
-  
-  if (isDbConnected) {
+  try {
+    // (opcional) crea la BD si no existe (útil en dev)
+    await ensureDatabase();
+
+    const ok = await testConnection();
+    if (!ok) {
+      console.error('⛔ No se pudo iniciar el servidor por problemas con la BD');
+      process.exit(1);
+    }
+
+    // Verificar que sí hay modelos
+    console.log('🧩 Modelos registrados:', Object.keys(sequelize.models));
+
+    // En desarrollo conviene alter: true (no uses force en prod)
+    await sequelize.sync({ alter: true });
+    console.log('🔄 Modelos sincronizados con la base de datos');
+
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });
-    
-    // Sincronizar modelos (opcional)
-    try {
-      await sequelize.sync({ force: false });
-      console.log('🔄 Modelos sincronizados con la base de datos');
-    } catch (syncError) {
-      console.error('❌ Error al sincronizar modelos:', syncError);
-    }
-  } else {
-    console.error('⛔ No se pudo iniciar el servidor debido a problemas con la base de datos');
-    process.exit(1);  // Salir con código de error
+  } catch (err) {
+    console.error('❌ Error al iniciar:', err);
+    process.exit(1);
   }
 };
 
