@@ -7,9 +7,12 @@ import './models/index.js'; // IMPORTANTE: registra modelos y asociaciones
 import authRoutes from './routes/authRoutes.js';
 import personaRoutes from './routes/persona.js';
 import usuarioRoutes from './routes/usuario.js';
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.APP_PORT || 3000;
+
+app.use(cors());
 
 // middlewares
 app.use(express.json());
