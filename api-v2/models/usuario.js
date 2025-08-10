@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 

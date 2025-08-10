@@ -5,10 +5,9 @@ export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 3) => 
   const { Usuario } = models;
   const usuarios = [];
 
-  // Creamos un usuario por persona (1:1)
   for (let i = 0; i < personas.length; i++) {
     const persona = personas[i];
-    const username = faker.internet.userName({ firstName: persona.nombre, lastName: persona.primer_apellido }).toLowerCase();
+    const username = faker.internet.username({ firstName: persona.nombre, lastName: persona.primer_apellido }).toLowerCase();
     const correo = faker.internet.email({ firstName: persona.nombre, lastName: persona.primer_apellido }).toLowerCase();
 
     const u = await Usuario.create({
@@ -16,10 +15,10 @@ export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 3) => 
       usuario: username,
       correo_electronico: correo,
       telefono: faker.phone.number('+52##########'),
-      contrasena_hash: 'Secret123*',   // setter del modelo lo hashea
+      contrasena_hash: 'Secret123*', // tu setter lo hashea con bcrypt
       estado: 'activo',
       is_active: true,
-      is_staff: i < cantidadAdmins,    // primeros N serán staff
+      is_staff: i < cantidadAdmins,
     });
     usuarios.push(u);
   }

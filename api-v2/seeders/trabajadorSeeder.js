@@ -1,29 +1,38 @@
-// seeders/usuarioSeeder.js
+// seeders/trabajadorSeeder.js
 import { faker } from '@faker-js/faker';
 
-export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 3) => {
-  const { Usuario } = models;
-  const usuarios = [];
+const PUESTO = ['conductor', 'supervisor', 'mantenimiento', 'administrativo'];
+const TURNO = ['matutino', 'vespertino', 'nocturno', 'mixto'];
 
-  // Creamos un usuario por persona (1:1)
-  for (let i = 0; i < personas.length; i++) {
-    const persona = personas[i];
-    const username = faker.internet.userName({ firstName: persona.nombre, lastName: persona.primer_apellido }).toLowerCase();
-    const correo = faker.internet.email({ firstName: persona.nombre, lastName: persona.primer_apellido }).toLowerCase();
+const randomFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-    const u = await Usuario.create({
-      personaId: persona.id,
-      usuario: username,
-      correo_electronico: correo,
-      telefono: faker.phone.number('+52##########'),
-      contrasena_hash: 'Secret123*',   // setter del modelo lo hashea
-      estado: 'activo',
-      is_active: true,
-      is_staff: i < cantidadAdmins,    // primeros N serán staff
+export const seedTrabajadores = async ({ models, usuarios }, porcentajeTrabajadores = 0.5) => {
+  const { Trabajador } = models;
+  const trabajadores = [];
+
+  const total = Math.max(5, Math.floor(usuarios.length * porcentajeTrabajadores));
+  const indices = Array.from({ length: usuarios.length }, (_, i) => i)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, total);
+
+  // Asegurar suficientes conductores
+  const minConductores = Math.max(4, Math.floor(total * 0.4));
+  let contConductores = 0;
+
+  for (let k = 0; k < indices.length; k++) {
+    const idx = indices[k];
+    const puesto = contConductores < minConductores ? 'conductor' : randomFrom(PUESTO);
+    if (puesto === 'conductor') contConductores++;
+
+    const t = await Trabajador.create({
+      usuarioId: usuarios[idx].id,
+      puesto,
+      turno: randomFrom(TURNO),
+      fecha_ingreso: faker.date.past({ years: 5 }),
     });
-    usuarios.push(u);
+    trabajadores.push(t);
   }
 
-  console.log(`🧑‍💻 Usuarios creados: ${usuarios.length} (staff: ${cantidadAdmins})`);
-  return usuarios;
+  console.log(`👷 Trabajadores: ${trabajadores.length} (conductores: ${contConductores})`);
+  return trabajadores;
 };
