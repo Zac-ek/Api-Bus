@@ -1,0 +1,40 @@
+// seeders/index.js
+import sequelize from '../config/db.js';
+import '../models/index.js'; // asegúrate que registra todas las asociaciones
+
+import { seedPersonas } from './personaSeeder.js';
+import { seedUsuarios } from './usuarioSeeder.js';
+import { seedTrabajadores } from './trabajadorSeeder.js';
+import { seedAutobuses } from './autobusSeeder.js';
+import { seedRutas } from './rutaSeeder.js';
+import { seedHorarios } from './horarioSeeder.js';
+import { seedBoletos } from './boletoSeeder.js';
+
+const run = async () => {
+  try {
+    console.log('🔄 sync...');
+    await sequelize.sync({ force: true }); // ⚠️ Borra y recrea tablas
+
+    const ctx = { models: sequelize.models };
+
+    const personas = await seedPersonas(ctx, 40);
+    const usuarios = await seedUsuarios({ ...ctx, personas }, 3);
+    const trabajadores = await seedTrabajadores({ ...ctx, usuarios }, 0.5);
+
+    const conductores = trabajadores.filter(t => t.puesto === 'conductor');
+    const autobuses = await seedAutobuses({ ...ctx, conductores }, 14);
+
+    const rutas = await seedRutas({ ...ctx, autobuses }, 28);
+    const horarios = await seedHorarios({ ...ctx, rutas }, 3);
+
+    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 3);
+
+    console.log('✅ Seed completo');
+    process.exit(0);
+  } catch (e) {
+    console.error('❌ Error en seed:', e);
+    process.exit(1);
+  }
+};
+
+run();
