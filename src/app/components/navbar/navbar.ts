@@ -1,18 +1,31 @@
+// src/app/components/navbar/navbar.component.ts
+
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth';
+
+// --- 1. Importa CommonModule y RouterModule ---
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  standalone: true,
+  // --- 2. Añade los módulos al array de imports ---
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.scss'
+  styleUrl: './navbar.scss',
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  isLoggedIn$: Observable<boolean>;
+  currentUser$: Observable<any>;
 
-  logout() {
-    // Aquí iría la lógica para limpiar el estado de la sesión
-    console.log('Cerrando sesión...');
-    this.router.navigate(['/login']);
+  constructor(private authService: AuthService) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.currentUser$ = this.authService.currentUser$;
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

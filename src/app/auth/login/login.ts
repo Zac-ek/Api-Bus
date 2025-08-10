@@ -1,25 +1,28 @@
+// src/app/auth/login/login.component.ts
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {
   ReactiveFormsModule,
   FormGroup,
   FormControl,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import {
   trigger,
-  state,
-  style,
   transition,
+  style,
   animate,
   group,
   query,
 } from '@angular/animations';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  // IMPORTANTE: ReactiveFormsModule debe estar aquí
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -80,12 +83,13 @@ import {
 })
 export class LoginComponent {
   isLoginView = true;
-  loginForm!: FormGroup;
-  registerForm!: FormGroup;
+  loginForm: FormGroup; // No usar '!' para asegurar la inicialización en el constructor
+  registerForm: FormGroup;
+  loginError: string | null = null;
+  registerError: string | null = null;
 
-  // ¡ESTA LÍNEA ES LA CORRECCIÓN!
-  // Al declarar 'private router: Router' aquí, Angular nos da acceso al servicio de rutas.
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
+    // Definimos los formularios DENTRO del constructor
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -101,23 +105,31 @@ export class LoginComponent {
     });
   }
 
-  toggleView() {
+  toggleView(): void {
     this.isLoginView = !this.isLoginView;
   }
 
-  onLogin() {
-    if (this.loginForm.valid) {
-      console.log('Login data:', this.loginForm.value);
-      // Ahora 'this.router' existe y podemos usarlo para navegar.
-      this.router.navigate(['/home']);
+  onLogin(): void {
+    if (this.loginForm.invalid) {
+      return;
     }
+    this.loginError = null;
+    this.authService.login(this.loginForm.value).subscribe({
+      next: () => this.router.navigate(['/home']),
+      error: (err) => {
+        console.error(err);
+        this.loginError = 'Credenciales incorrectas.';
+      },
+    });
   }
 
-  onRegister() {
-    if (this.registerForm.valid) {
-      console.log('Register data:', this.registerForm.value);
-      // Podrías también navegar al home después de un registro exitoso.
-      this.router.navigate(['/home']);
+  onRegister(): void {
+    if (this.registerForm.invalid) {
+      return;
     }
+    this.registerError = null;
+    console.log('Datos de registro:', this.registerForm.value);
+    // Aquí iría la llamada a authService.register(...)
+    this.router.navigate(['/dashboard']);
   }
 }

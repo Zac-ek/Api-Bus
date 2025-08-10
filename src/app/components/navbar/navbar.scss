@@ -59,3 +59,33 @@
     }
   }
 }
+
+.navbar-user {
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 500;
+
+    .fa-user-circle {
+      font-size: 1.8rem; // Ícono de usuario más grande
+      color: #6c757d;
+    }
+  }
+
+  .logout-button {
+    background-color: transparent;
+    border: 1px solid #ced4da;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #f8f9fa;
+      border-color: #adb5bd;
+    }
+  }
+}

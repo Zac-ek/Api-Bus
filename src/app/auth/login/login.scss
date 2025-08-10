@@ -252,3 +252,12 @@ $border-color: #dee2e6;
     transform: translateX(18px);
   }
 }
+
+.error-message {
+  color: #D8000C;
+  background-color: #FFD2D2;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
+}
