@@ -2,7 +2,10 @@
 import express from 'express';
 import sequelize, { testConnection } from './config/db.js';
 import { ensureDatabase } from './config/ensureDb.js'; // opcional
+import swaggerDocs from './config/swagger.js';
 import './models/index.js'; // IMPORTANTE: registra modelos y asociaciones
+import authRoutes from './routes/authRoutes.js';
+import personaRoutes from './routes/persona.js';
 
 const app = express();
 const PORT = process.env.APP_PORT || 3000;
@@ -13,6 +16,10 @@ app.use(express.json());
 // rutas (ejemplo)
 // import personaRoutes from './routes/persona.routes.js';
 // app.use('/api/personas', personaRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/personas', personaRoutes);
+
+swaggerDocs(app);
 
 const startServer = async () => {
   try {

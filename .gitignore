@@ -1,3 +1,5 @@
+__pycache__/
+api_bus/
 node_modules/
 
 .env

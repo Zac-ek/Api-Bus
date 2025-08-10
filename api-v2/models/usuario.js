@@ -27,7 +27,13 @@ const Usuario = sequelize.define(
       validate: { isEmail: true },
     },
     telefono: { type: DataTypes.TEXT, allowNull: true },
-    contrasena_hash: { type: DataTypes.TEXT, allowNull: true },
+    contrasena_hash: {
+      type: DataTypes.STRING(128),
+      allowNull: true,
+      set(value) {
+        this.setDataValue('contrasena_hash', bcrypt.hashSync(value, 10));
+      }
+    },
     estado: {
       type: DataTypes.STRING(16),
       allowNull: true,
@@ -45,6 +51,18 @@ const Usuario = sequelize.define(
     underscored: true,
   }
 );
+
+// Método para comparar contraseñas
+Usuario.prototype.comparePassword = async function(password) {
+  return await bcrypt.compare(password, this.contrasena_hash);
+};
+
+// Método para generar token JWT
+Usuario.prototype.generateAuthToken = function() {
+  return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN
+  });
+};
 
 Usuario.associate = (models) => {
   Usuario.belongsTo(models.Persona, { as: 'persona', foreignKey: 'personaId' });
