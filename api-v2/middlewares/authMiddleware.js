@@ -1,24 +1,34 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/jwt.js';
+import Usuario from '../models/usuario.js';
 
-export const authenticate = (req, res, next) => {
-  // 1. Obtener token del header
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-
-  if (!token) {
-    return res.status(401).json({ 
-      success: false,
-      message: 'Acceso denegado. No se proporcionó token.' 
-    });
-  }
-
+export const authenticate = async (req, res, next) => {
   try {
-    // 2. Verificar token
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Acceso no autorizado' 
+      });
+    }
+
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Añadir datos del usuario al request
+    const usuario = await Usuario.findByPk(decoded.id, {
+      attributes: { exclude: ['contrasena_hash'] }
+    });
+
+    if (!usuario || !usuario.is_active) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Usuario no autorizado' 
+      });
+    }
+
+    req.user = usuario;
     next();
   } catch (error) {
-    res.status(400).json({ 
+    res.status(401).json({ 
       success: false,
       message: 'Token inválido o expirado' 
     });

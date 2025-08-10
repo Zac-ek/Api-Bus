@@ -17,7 +17,7 @@ export const login = async (req, res) => {
     const usuario = await Usuario.findOne({ 
       where: { correo_electronico },
       include: [{
-        model: Persona,
+        model: Persona, as: 'persona',
         attributes: ['nombre', 'primer_apellido']
       }]
     });
@@ -48,7 +48,7 @@ export const login = async (req, res) => {
       user: {
         id: usuario.id,
         email: usuario.correo_electronico,
-        name: `${usuario.Persona.nombre} ${usuario.Persona.primer_apellido}`,
+        name: `${usuario.persona.nombre} ${usuario.persona.primer_apellido}`,
         role: usuario.role || 'user'
       }
     });

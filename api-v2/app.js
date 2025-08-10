@@ -6,6 +6,7 @@ import swaggerDocs from './config/swagger.js';
 import './models/index.js'; // IMPORTANTE: registra modelos y asociaciones
 import authRoutes from './routes/authRoutes.js';
 import personaRoutes from './routes/persona.js';
+import usuarioRoutes from './routes/usuario.js';
 
 const app = express();
 const PORT = process.env.APP_PORT || 3000;
@@ -13,17 +14,14 @@ const PORT = process.env.APP_PORT || 3000;
 // middlewares
 app.use(express.json());
 
-// rutas (ejemplo)
-// import personaRoutes from './routes/persona.routes.js';
-// app.use('/api/personas', personaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/personas', personaRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 swaggerDocs(app);
 
 const startServer = async () => {
   try {
-    // (opcional) crea la BD si no existe (útil en dev)
     await ensureDatabase();
 
     const ok = await testConnection();
@@ -32,10 +30,8 @@ const startServer = async () => {
       process.exit(1);
     }
 
-    // Verificar que sí hay modelos
     console.log('🧩 Modelos registrados:', Object.keys(sequelize.models));
 
-    // En desarrollo conviene alter: true (no uses force en prod)
     await sequelize.sync({ alter: true });
     console.log('🔄 Modelos sincronizados con la base de datos');
 
