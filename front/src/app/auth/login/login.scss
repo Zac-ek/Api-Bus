@@ -1,0 +1,263 @@
+/* src/app/auth/login/login.component.scss */
+/* src/app/auth/login/login.scss */
+
+// Variables para colores y estilos consistentes
+$primary-color: #007bff;
+$text-color: #333;
+$text-light: #6c757d;
+$background-grey: #f0f2f5;
+$border-color: #dee2e6;
+
+:host {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; // Evita barras de scroll indeseadas
+}
+
+// ---- Panel Izquierdo (Imagen y Texto) ----
+.left-panel {
+  flex: 0 0 55%;
+  background: url("../../../assets/img/autobus.png") center center / cover no-repeat;
+  position: relative;
+  color: white;
+
+  .left-panel-content {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .brand-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .welcome-footer {
+    p {
+      font-size: 1.25rem;
+      max-width: 450px;
+      margin-bottom: 1rem;
+    }
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+// ---- Panel Derecho (Formulario) ----
+.right-panel {
+  flex: 0 0 45%;
+  display: flex;
+  margin-left:-50px ;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: $background-grey;
+
+  .forms-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: 650px; // Altura fija para evitar que el layout salte
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Contenedor para ambos formularios (Login y Registro)
+.login-form-container {
+  position: absolute; // Clave para que la animación funcione
+  width: 100%;
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $text-color;
+    margin: 0;
+  }
+
+  .subtitle {
+    color: $text-light;
+    margin-bottom: 2rem;
+  }
+}
+
+// Estilos para los campos de texto con íconos
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-light;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  i {
+    position: absolute;
+    left: 1rem;
+    top: 52%;
+    color: $text-light;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+  }
+}
+
+// Opciones debajo de los inputs
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+
+  .forgot-password {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
+
+// Botones
+.primary-button,
+.google-button {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.primary-button {
+  background-color: $primary-color;
+  color: white;
+
+  &:disabled {
+    background-color: #b3d7ff;
+    cursor: not-allowed;
+  }
+}
+
+.google-button {
+  background-color: white;
+  color: $text-color;
+  border-color: $border-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  img {
+    height: 1.25rem;
+  }
+}
+
+// Separador "O también puedes"
+.separator {
+  text-align: center;
+  color: $text-light;
+  margin: 1.5rem 0;
+}
+
+// Enlace final para crear cuenta/iniciar sesión
+.signup-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: $text-light;
+  a {
+    color: $primary-color;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+// Toggle Switch CSS
+.remember-session {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $text-light;
+  font-weight: 600;
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    input {
+      display: none;
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    &.round {
+      border-radius: 34px;
+    }
+    &:before {
+      position: absolute;
+      content: '';
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      &.round {
+        border-radius: 50%;
+      }
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $primary-color;
+  }
+  input:checked + .slider:before {
+    transform: translateX(18px);
+  }
+}
+
+.error-message {
+  color: #D8000C;
+  background-color: #FFD2D2;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
+}
