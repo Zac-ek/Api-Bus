@@ -13,7 +13,7 @@ import { seedBoletos } from './boletoSeeder.js';
 const run = async () => {
   try {
     console.log('🔄 sync...');
-    await sequelize.sync({ force: true }); // ⚠️ Borra y recrea tablas
+    await sequelize.sync({ force: true }); // Borra y recrea tablas
 
     const ctx = { models: sequelize.models };
 
@@ -27,7 +27,7 @@ const run = async () => {
     const rutas = await seedRutas({ ...ctx, autobuses }, 28);
     const horarios = await seedHorarios({ ...ctx, rutas }, 3);
 
-    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 3);
+    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 10, 100);
 
     console.log('✅ Seed completo');
     process.exit(0);
