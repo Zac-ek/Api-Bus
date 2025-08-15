@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 const GENERO = ['M', 'F', 'O'];
 const TIPO = ['usuario', 'acompanante', 'externo'];
 
-export const seedPersonas = async ({ models }, cantidad = 40) => {
+export const seedPersonas = async ({ models }, cantidad = 100) => {
   const { Persona } = models;
   const personas = [];
 

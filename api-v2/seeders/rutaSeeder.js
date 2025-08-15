@@ -1,7 +1,7 @@
 // seeders/rutaSeeder.js
 import { faker } from '@faker-js/faker';
 
-export const seedRutas = async ({ models, autobuses }, cantidad = 28) => {
+export const seedRutas = async ({ models, autobuses }, cantidad = 30) => {
   const { Ruta } = models;
   const rutas = [];
 
