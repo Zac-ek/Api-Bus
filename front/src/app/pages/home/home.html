@@ -1,30 +1,58 @@
 <div class="home-container">
-  <section class="hero-section">
-    <div class="search-widget">
+<section class="hero-section">
+  <div class="container">
+    <div class="search-widget" [formGroup]="form">
+      <div class="search-header">
+        <h1>Encuentra tu próximo viaje</h1>
+        <p>Rutas seguras y precios claros en todo México.</p>
+      </div>
 
-      <h3>¡Hola! ¿A dónde vamos hoy?</h3>
       <div class="search-form">
         <div class="input-field">
           <label>Origen</label>
-          <input type="text" placeholder="Ciudad de origen" />
+          <div class="select-row">
+            <select formControlName="origen">
+              <option value="" disabled>Selecciona origen</option>
+              <option *ngFor="let o of origenes" [value]="o">{{ o }}</option>
+            </select>
+            <button type="button" class="swap" (click)="swap()" title="Intercambiar origen/destino" aria-label="Intercambiar">⇄</button>
+          </div>
+          <small *ngIf="cargandoOrigenes">Cargando orígenes…</small>
         </div>
+
         <div class="input-field">
           <label>Destino</label>
-          <input type="text" placeholder="Ciudad de destino" />
+          <select formControlName="destino" [disabled]="!destinos.length">
+            <option value="" disabled>Selecciona destino</option>
+            <option *ngFor="let d of destinos" [value]="d">{{ d }}</option>
+          </select>
+          <small *ngIf="cargandoDestinos">Cargando destinos…</small>
         </div>
+
         <div class="input-field">
           <label>Salida</label>
-          <input type="date" />
+          <input type="date" formControlName="fecha" [attr.min]="minDate">
         </div>
-        <button class="search-button">Buscar boletos</button>
+
+        <button class="btn-primary" (click)="buscar()" [disabled]="!form.valid">Buscar</button>
+      </div>
+
+      <div class="subnote">
+        <span class="badge">Sin comisiones</span>
+        <span class="dot"></span>
+        <span class="badge">Cobertura nacional</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+
+
   <section class="content-section">
     <h2>Explora Nuestros Destinos</h2>
     <div class="carousel-wrapper">
       <div class="carousel-track">
-        <div class="dest-card">
+        <div class="dest-card" bbGlow >
           <img src="assets/img/destinos/Puebla.png" alt="Puebla" />
           <div class="promo-info">
             <h4>Puebla</h4>
@@ -32,7 +60,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow >
           <img src="assets/img/destinos/Guadalajara.png" alt="Guadalajara" />
           <div class="promo-info">
             <h4>Guadalajara</h4>
@@ -40,7 +68,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow >
           <img src="assets/img/destinos/Monterrey.png" alt="Monterrey" />
           <div class="promo-info">
             <h4>Monterrey</h4>
@@ -48,7 +76,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow >
           <img src="assets/img/destinos/CDMX.png" alt="Ciudad de México" />
           <div class="promo-info">
             <h4>Ciudad de México</h4>
@@ -56,7 +84,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/Cancun.png" alt="Cancún" />
           <div class="promo-info">
             <h4>Cancún</h4>
@@ -64,7 +92,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/Puebla.png" alt="Puebla" />
           <div class="promo-info">
             <h4>Puebla</h4>
@@ -72,7 +100,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/Guadalajara.png" alt="Guadalajara" />
           <div class="promo-info">
             <h4>Guadalajara</h4>
@@ -80,7 +108,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/Monterrey.png" alt="Monterrey" />
           <div class="promo-info">
             <h4>Monterrey</h4>
@@ -88,7 +116,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/CDMX.png" alt="Ciudad de México" />
           <div class="promo-info">
             <h4>Ciudad de México</h4>
@@ -96,7 +124,7 @@
             <button class="card-button">Buscar Viajes</button>
           </div>
         </div>
-        <div class="dest-card">
+        <div class="dest-card" bbGlow>
           <img src="assets/img/destinos/Cancun.png" alt="Cancún" />
           <div class="promo-info">
             <h4>Cancún</h4>
