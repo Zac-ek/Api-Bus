@@ -26,18 +26,10 @@
         <label><input type="checkbox" [(ngModel)]="slotEnabled.noche" (change)="onToggleSlot()"> Noche (18–24)</label>
       </div>
 
-      <div class="card">
-        <h3>Empresa</h3>
-        <select [ngModel]="selectedEmpresa" (ngModelChange)="onEmpresaChange($event)">
-          <option value="all">Todas</option>
-          <option *ngFor="let e of empresas" [value]="e">{{ e }}</option>
-        </select>
-      </div>
-
       <div class="card" *ngIf="clases.length">
         <h3>Clase</h3>
         <label *ngFor="let c of clases">
-          <input type="checkbox" [checked]="selectedClases.has(c)" (change)="toggleClase(c, $event.target.checked)">
+          <input type="checkbox" [ngModel]="selectedClases.has(c)" (ngModelChange)="toggleClase(c, $event)">
           {{ c }}
         </label>
       </div>
