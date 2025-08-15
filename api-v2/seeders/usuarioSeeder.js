@@ -1,7 +1,7 @@
 // seeders/usuarioSeeder.js
 import { faker } from '@faker-js/faker';
 
-export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 3) => {
+export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 5) => {
   const { Usuario } = models;
   const usuarios = [];
 

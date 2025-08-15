@@ -8,13 +8,15 @@ import authRoutes from './routes/authRoutes.js';
 import personaRoutes from './routes/persona.js';
 import usuarioRoutes from './routes/usuario.js';
 import viajeRoutes from './routes/viajes.routes.js';
+
 import cors from 'cors';
 
 const app = express();
 const PORT = process.env.APP_PORT || 3000;
 
-app.use(cors())
-// middlewares
+
+app.use(cors());
+
 app.use(express.json());
 
 app.use('/api', viajeRoutes);
