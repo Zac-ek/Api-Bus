@@ -2,27 +2,28 @@
 import { faker } from '@faker-js/faker';
 
 const GENERO = ['M', 'F', 'O'];
-const TIPO = ['usuario', 'acompanante', 'externo'];
+const TIPO = ['usuario', 'acompanante', 'externo', 'trabajador'];
 
-export const seedPersonas = async ({ models }, cantidad = 100) => {
+export const seedPersonas = async ({ models }, cantidad = 100, porcentajeTrabajador = 0.30) => {
   const { Persona } = models;
   const personas = [];
+  const personasTrabajadorIds = [];
 
   for (let i = 0; i < cantidad; i++) {
-    const nombre = faker.person.firstName();
-    const ap1 = faker.person.lastName();
-    const ap2 = faker.person.lastName();
+    const esTrabajador = Math.random() < porcentajeTrabajador;
     const p = await Persona.create({
-      nombre,
-      primer_apellido: ap1,
-      segundo_apellido: ap2,
+      nombre: faker.person.firstName(),
+      primer_apellido: faker.person.lastName(),
+      segundo_apellido: faker.person.lastName(),
       genero: GENERO[i % GENERO.length],
       fecha_nacimiento: faker.date.birthdate({ min: 18, max: 65, mode: 'age' }),
-      tipo: TIPO[0], // la mayoría 'usuario'
+      tipo: esTrabajador ? 'trabajador' : 'usuario',
       documento_identidad: faker.string.alphanumeric({ length: 10 }).toUpperCase(),
     });
+    if (esTrabajador) personasTrabajadorIds.push(p.id);
     personas.push(p);
   }
-  console.log(`👤 Personas creadas: ${personas.length}`);
-  return personas;
+
+  console.log(`👤 Personas creadas: ${personas.length} (trabajadores: ${personasTrabajadorIds.length})`);
+  return { personas, personasTrabajadorIds };
 };
