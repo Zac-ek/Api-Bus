@@ -1,0 +1,75 @@
+<div class="left-panel">
+  <div class="left-panel-content">
+    <header class="brand-header">ByteBuss</header>
+    <footer class="welcome-footer">
+      <p>"Simplemente todo lo que necesitas en tu camino está con nosotros."</p>
+      <span>¡Empieza tu viaje hoy!</span>
+    </footer>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="forms-wrapper" [@formAnimation]="isLoginView ? 'login' : 'register'">
+
+    <div class="login-form-container" *ngIf="isLoginView">
+      <h2>Bienvenido a ByteBuss</h2>
+      <p class="subtitle">Inicia sesión para continuar con tu viaje</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <label for="email">Correo electrónico*</label>
+          <input id="email" type="email" formControlName="email">
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <label for="password">Contraseña*</label>
+          <input id="password" type="password" formControlName="password">
+        </div>
+        <div class="form-options">
+          <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+          <div class="remember-session">
+            <span>Recordar sesión</span>
+            <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+          </div>
+        </div>
+        <button type="submit" class="primary-button" [disabled]="loginForm.invalid">Iniciar sesión</button>
+        <div *ngIf="loginError" class="error-message">{{ loginError }}</div>
+        <div class="separator">O también puedes</div>
+        <button type="button" class="google-button">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+          Continuar con Google
+        </button>
+        <p class="signup-link">
+          ¿No tienes cuenta? <a href="javascript:void(0)" (click)="toggleView()">Crea una</a>
+        </p>
+      </form>
+    </div>
+
+    <div class="login-form-container" *ngIf="!isLoginView">
+      <h2>Crea tu cuenta</h2>
+      <p class="subtitle">Es rápido y fácil</p>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <div class="input-group">
+          <i class="fa-solid fa-user"></i>
+          <label for="fullName">Nombre completo*</label>
+          <input id="fullName" type="text" formControlName="fullName">
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-envelope"></i>
+          <label for="reg-email">Correo electrónico*</label>
+          <input id="reg-email" type="email" formControlName="email">
+        </div>
+        <div class="input-group">
+          <i class="fa-solid fa-lock"></i>
+          <label for="reg-password">Contraseña*</label>
+          <input id="reg-password" type="password" formControlName="password">
+        </div>
+        <button type="submit" class="primary-button" [disabled]="registerForm.invalid">Crear cuenta</button>
+        <p class="signup-link">
+          ¿Ya tienes cuenta? <a href="javascript:void(0)" (click)="toggleView()">Inicia sesión</a>
+        </p>
+      </form>
+    </div>
+
+  </div>
+</div>

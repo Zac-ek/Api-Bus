@@ -1,0 +1,122 @@
+<section class="results-wrap">
+
+  <!-- Encabezado de ruta/fecha -->
+  <header class="results-header">
+    <div>
+      <h2>{{ origen }} → {{ destino }}</h2>
+      <p>{{ fecha | date:'EEEE d \'de\' MMMM, y' }}</p>
+    </div>
+    <div class="summary">
+      <span *ngIf="loading">Cargando…</span>
+      <span *ngIf="!loading">{{ trips.length }} resultados</span>
+    </div>
+  </header>
+
+  <!-- Layout con filtros y lista -->
+  <div class="results-grid">
+
+    <!-- Filtros -->
+    <aside class="filters">
+      <div class="card">
+        <h3>Horario</h3>
+        <label><input type="checkbox" [(ngModel)]="slotEnabled.madrugada" (change)="onToggleSlot()"> Madrugada
+          (00–05)</label>
+        <label><input type="checkbox" [(ngModel)]="slotEnabled.manana" (change)="onToggleSlot()"> Mañana (05–12)</label>
+        <label><input type="checkbox" [(ngModel)]="slotEnabled.tarde" (change)="onToggleSlot()"> Tarde (12–18)</label>
+        <label><input type="checkbox" [(ngModel)]="slotEnabled.noche" (change)="onToggleSlot()"> Noche (18–24)</label>
+      </div>
+
+      <div class="card" *ngIf="clases.length">
+        <h3>Clase</h3>
+        <label *ngFor="let c of clases">
+          <input type="checkbox" [ngModel]="selectedClases.has(c)" (ngModelChange)="toggleClase(c, $event)">
+          {{ c }}
+        </label>
+      </div>
+
+      <div class="card" *ngIf="priceMax > 0">
+        <h3>Precio máximo</h3>
+        <div class="range">
+          <input type="range" [min]="priceMin" [max]="priceMax" [step]="10" [ngModel]="priceMaxFilter"
+            (ngModelChange)="onPriceChange($event)">
+          <div class="range-values">
+            <span>${{ priceMin }}</span>
+            <strong>${{ priceMaxFilter }}</strong>
+            <span>${{ priceMax }}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Lista de resultados -->
+    <main class="list">
+      <div class="toolbar">
+        <label>Ordenar por
+          <select [ngModel]="sortBy" (ngModelChange)="onSortChange($event)">
+            <option value="earliest">Más temprano</option>
+            <option value="cheapest">Más barato</option>
+            <option value="fastest">Más rápido</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Skeletons de carga -->
+      <ng-container *ngIf="loading">
+        <article class="result-card skeleton" *ngFor="let s of [1,2,3,4]">
+          <div class="left">
+            <div class="line w120"></div>
+            <div class="line w80"></div>
+          </div>
+          <div class="mid">
+            <div class="line w100"></div>
+            <div class="line w140"></div>
+          </div>
+          <div class="right">
+            <div class="pill"></div>
+            <div class="btn"></div>
+          </div>
+        </article>
+      </ng-container>
+
+      <!-- Vacío -->
+      <div class="empty" *ngIf="!loading && !error && trips.length===0">
+        No hay viajes que coincidan con tus filtros.
+      </div>
+
+      <!-- Error -->
+      <div class="empty" *ngIf="!loading && error">{{ error }}</div>
+
+      <!-- Items -->
+      <article class="result-card" *ngFor="let t of trips">
+        <div class="left">
+          <div class="times">
+            <div class="hour">{{ t.salida | date:'HH:mm' }}</div>
+            <div class="sep">→</div>
+            <div class="hour">{{ t.llegada | date:'HH:mm' }}</div>
+          </div>
+          <div class="date">{{ t.salida | date:'EEE d MMM' }}</div>
+        </div>
+
+        <div class="mid">
+          <div class="route">{{ origen }} → {{ destino }}</div>
+          <div class="meta">
+            <span class="badge">{{ t.empresa }}</span>
+            <span class="dot"></span>
+            <span class="badge">{{ t.clase }}</span>
+            <span class="dot"></span>
+            <span>Duración: {{ durationStr(t) }}</span>
+            <span class="dot"></span>
+            <span>Asientos: {{ t.asientosDisponibles }}</span>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="price">${{ t.precio | number:'1.0-0' }}</div>
+          <button class="buy" (click)="seleccionar(t)" [disabled]="t.asientosDisponibles===0">
+            {{ t.asientosDisponibles===0 ? 'Agotado' : 'Seleccionar' }}
+          </button>
+        </div>
+      </article>
+    </main>
+  </div>
+</section>

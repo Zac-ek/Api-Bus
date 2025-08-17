@@ -1,0 +1,210 @@
+<div class="home-container">
+<section class="hero-section">
+  <div class="container">
+    <div class="search-widget" [formGroup]="form">
+      <div class="search-header">
+        <h1>Encuentra tu próximo viaje</h1>
+        <p>Rutas seguras y precios claros en todo México.</p>
+      </div>
+
+      <div class="search-form">
+        <div class="input-field">
+          <label>Origen</label>
+          <div class="select-row">
+            <select formControlName="origen">
+              <option value="" disabled>Selecciona origen</option>
+              <option *ngFor="let o of origenes" [value]="o">{{ o }}</option>
+            </select>
+            <button type="button" class="swap" (click)="swap()" title="Intercambiar origen/destino" aria-label="Intercambiar">⇄</button>
+          </div>
+          <small *ngIf="cargandoOrigenes">Cargando orígenes…</small>
+        </div>
+
+        <div class="input-field">
+          <label>Destino</label>
+          <select formControlName="destino" [disabled]="!destinos.length">
+            <option value="" disabled>Selecciona destino</option>
+            <option *ngFor="let d of destinos" [value]="d">{{ d }}</option>
+          </select>
+          <small *ngIf="cargandoDestinos">Cargando destinos…</small>
+        </div>
+
+        <div class="input-field">
+          <label>Salida</label>
+          <input type="date" formControlName="fecha" [attr.min]="minDate">
+        </div>
+
+        <button class="btn-primary" (click)="buscar()" [disabled]="!form.valid">Buscar</button>
+      </div>
+
+      <div class="subnote">
+        <span class="badge">Sin comisiones</span>
+        <span class="dot"></span>
+        <span class="badge">Cobertura nacional</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  <section class="content-section">
+    <h2>Explora Nuestros Destinos</h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track">
+        <div class="dest-card" bbGlow >
+          <img src="assets/img/destinos/Puebla.png" alt="Puebla" />
+          <div class="promo-info">
+            <h4>Puebla</h4>
+            <p>Descubre la joya colonial de México.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow >
+          <img src="assets/img/destinos/Guadalajara.png" alt="Guadalajara" />
+          <div class="promo-info">
+            <h4>Guadalajara</h4>
+            <p>La cuna del mariachi y el tequila te espera.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow >
+          <img src="assets/img/destinos/Monterrey.png" alt="Monterrey" />
+          <div class="promo-info">
+            <h4>Monterrey</h4>
+            <p>La imponente capital industrial de México.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow >
+          <img src="assets/img/destinos/CDMX.png" alt="Ciudad de México" />
+          <div class="promo-info">
+            <h4>Ciudad de México</h4>
+            <p>Vive la energía de la vibrante capital.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/Cancun.png" alt="Cancún" />
+          <div class="promo-info">
+            <h4>Cancún</h4>
+            <p>Relájate en las playas del Caribe Mexicano.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/Puebla.png" alt="Puebla" />
+          <div class="promo-info">
+            <h4>Puebla</h4>
+            <p>Descubre la joya colonial de México.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/Guadalajara.png" alt="Guadalajara" />
+          <div class="promo-info">
+            <h4>Guadalajara</h4>
+            <p>La cuna del mariachi y el tequila te espera.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/Monterrey.png" alt="Monterrey" />
+          <div class="promo-info">
+            <h4>Monterrey</h4>
+            <p>La imponente capital industrial de México.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/CDMX.png" alt="Ciudad de México" />
+          <div class="promo-info">
+            <h4>Ciudad de México</h4>
+            <p>Vive la energía de la vibrante capital.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+        <div class="dest-card" bbGlow>
+          <img src="assets/img/destinos/Cancun.png" alt="Cancún" />
+          <div class="promo-info">
+            <h4>Cancún</h4>
+            <p>Relájate en las playas del Caribe Mexicano.</p>
+            <button class="card-button">Buscar Viajes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content-section">
+    <h2>Nuestras Promociones</h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track">
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1598422748389-952e4142d534?w=400" alt="Playa" />
+          <div class="promo-info">
+            <h4>Viaja a la playa</h4>
+            <p>20% de descuento en rutas a Cancún.</p>
+            <button class="card-button">Ver viajes</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1559981423-d5e396343513?w=400" alt="Montaña" />
+          <div class="promo-info">
+            <h4>Aventura en la montaña</h4>
+            <p>Compra tu boleto a los Alpes.</p>
+            <button class="card-button">Explorar</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1528181304800-259b08848526?w=400" alt="Ciudad" />
+          <div class="promo-info">
+            <h4>Escapada urbana</h4>
+            <p>Descubre la capital del país.</p>
+            <button class="card-button">Reservar</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1587899932095-c07a34a6d712?w=400" alt="Bosque" />
+          <div class="promo-info">
+            <h4>Retiro en el bosque</h4>
+            <p>Conéctate con la naturaleza.</p>
+            <button class="card-button">Ir ahora</button>
+          </div>
+        </div>
+
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1598422748389-952e4142d534?w=400" alt="Playa" />
+          <div class="promo-info">
+            <h4>Viaja a la playa</h4>
+            <p>20% de descuento en rutas a Cancún.</p>
+            <button class="card-button">Ver viajes</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1559981423-d5e396343513?w=400" alt="Montaña" />
+          <div class="promo-info">
+            <h4>Aventura en la montaña</h4>
+            <p>Compra tu boleto a los Alpes.</p>
+            <button class="card-button">Explorar</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1528181304800-259b08848526?w=400" alt="Ciudad" />
+          <div class="promo-info">
+            <h4>Escapada urbana</h4>
+            <p>Descubre la capital del país.</p>
+            <button class="card-button">Reservar</button>
+          </div>
+        </div>
+        <div class="promo-card">
+          <img src="https://images.unsplash.com/photo-1587899932095-c07a34a6d712?w=400" alt="Bosque" />
+          <div class="promo-info">
+            <h4>Retiro en el bosque</h4>
+            <p>Conéctate con la naturaleza.</p>
+            <button class="card-button">Ir ahora</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
