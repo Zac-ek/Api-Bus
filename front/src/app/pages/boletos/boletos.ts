@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';           // <-- IMPORTA ESTO
+import { FormsModule } from '@angular/forms'; // <-- IMPORTA ESTO
 import { TicketsService, Viaje as Trip } from '../../services/tickets';
-
+import { Router } from '@angular/router';
 type SlotKey = 'madrugada' | 'manana' | 'tarde' | 'noche';
 
 @Component({
@@ -16,7 +16,7 @@ type SlotKey = 'madrugada' | 'manana' | 'tarde' | 'noche';
 export class BoletosComponent {
   private route = inject(ActivatedRoute);
   private api = inject(TicketsService);
-
+  private router = inject(Router);
   // estado
   loading = true;
   error = '';
@@ -160,7 +160,17 @@ export class BoletosComponent {
   }
 
   seleccionar(t: Trip) {
-    // Aquí puedes navegar a /checkout/:id
-    console.log('Seleccionar viaje', t.id);
+    // id viene como "rutaId-horarioId"
+    const tripId = t.id;
+    // pasa también datos útiles (precio, origen, destino, hora) por query
+    this.router.navigate(['/asientos', tripId], {
+      queryParams: {
+        precio: t.precio,
+        origen: this.origen,
+        destino: this.destino,
+        salida: t.salida,
+        llegada: t.llegada,
+      },
+    });
   }
 }

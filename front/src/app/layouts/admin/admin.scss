@@ -1,0 +1,251 @@
+/* === Paleta oscura === */
+:root {
+  --bg: #0b1220; /* fondo base */
+  --bg-2: #0a1625; /* fondo profundo */
+  --panel: #0e1b2c; /* cards */
+  --panel-2: #0a1421;
+  --ink: #e6f0ff; /* texto principal */
+  --muted: #9fb3c8; /* texto secundario */
+  --blue: #3490ff; /* acento */
+  --blue2: #5aa9ff;
+  --border: rgba(110, 150, 200, 0.18);
+  --shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+  --rad: 14px;
+}
+
+.admin {
+  display: grid;
+  grid-template-columns: 220px 1fr; /* visible por defecto */
+  height: 100%;
+  min-height: 100dvh;
+  color: var(--ink);
+  background: var(--bg);
+  transition: grid-template-columns 0.25s ease;
+}
+
+.admin.is-collapsed {
+  grid-template-columns: 0 1fr;
+}
+
+/* 👉 Si en algún momento quieres mostrar el menú: agrega la clase .show-nav al contenedor .admin */
+.admin.show-nav {
+  grid-template-columns: 220px 1fr;
+}
+
+
+/* Sidebar oscuro (queda colapsado por defecto) */
+.sidebar {
+  background: linear-gradient(180deg, #081321, #07101b);
+  border-right: 1px solid var(--border);
+  padding: 14px 10px;
+
+  width: 220px;
+  opacity: 1;
+  pointer-events: auto;
+  overflow: hidden;
+  transition: width 0.25s ease, opacity 0.2s ease, padding 0.2s ease,
+    border 0.2s ease;
+}
+
+.admin.is-collapsed .sidebar {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+}
+
+/* Fondo del contenido MUY oscuro con halos */
+.content {
+  background: radial-gradient(60% 70% at 20% -10%, #112540, transparent 65%),
+    radial-gradient(45% 60% at 110% 10%, #0c1e34, transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+
+/* Topbar más discreta en oscuro */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #07101b;
+  padding: 12px 18px;
+
+  .ghost {
+    margin-right: 12px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cfe2ff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  .bar {
+    height: 26px;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+  }
+  .avatar {
+    margin-left: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue2));
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: white;
+  }
+}
+
+.inner {
+  padding: 10px;
+  background-color: #0a1a33;
+}
+
+/* Tarjetas y KPIs en oscuro */
+.dash .kpi {
+  background: linear-gradient(
+    180deg,
+    rgba(30, 56, 92, 0.5),
+    rgba(12, 26, 42, 0.95)
+  );
+  border: 1px solid rgba(96, 140, 200, 0.28);
+  border-radius: var(--rad);
+  box-shadow: var(--shadow);
+}
+.dash .k-label {
+  color: var(--muted);
+}
+.dash .k-value {
+  color: #fff;
+}
+
+.dash .card {
+  background: linear-gradient(
+    180deg,
+    rgba(16, 32, 54, 0.9),
+    rgba(10, 20, 34, 0.96)
+  );
+  border: 1px solid rgba(94, 126, 199, 0.25);
+  border-radius: var(--rad);
+  box-shadow: var(--shadow);
+  h3 {
+    color: #cfe2ff;
+  }
+}
+
+/* Tabla de choferes en oscuro */
+.dash .drivers {
+  color: var(--ink);
+  th,
+  td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  th {
+    color: var(--muted);
+  }
+}
+.dash .avatar {
+  background: linear-gradient(135deg, var(--blue), var(--blue2));
+}
+
+/* Leyenda dona */
+.dash .legend {
+  color: #cfe2ff;
+}
+.dash .swatch.a {
+  background: #2b6df3;
+}
+.dash .swatch.p {
+  background: #4f46e5;
+}
+.dash .swatch.u {
+  background: #0a1a33;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.brand{
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+.title{
+  font-size: 20px;
+  font-weight: 600;
+  color: #cfe2ff;
+  margin-bottom: 10px;
+}
+
+.logo{
+  width: 56%;
+  height: 50%;
+}
+}
+
+
+
+/* Chart.js – asegura que los canvas no “floten” */
+:host ::ng-deep canvas {
+  max-height: 260px;
+}
+
+/* En pantallas chicas, fuerza colapsado */
+@media (max-width: 1200px) {
+  .admin.is-collapsed {
+    grid-template-columns: 0 1fr;
+  }
+  .admin.is-collapsed .sidebar {
+    width: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+
+:host ::ng-deep .sidebar .menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+:host ::ng-deep .sidebar .menu a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  color: #cfe2ff !important;
+  text-decoration: none !important;
+  border: 1px solid transparent !important;
+}
+
+:host ::ng-deep .sidebar .menu a:hover {
+  background: rgba(52, 144, 255, 0.10) !important;
+  border-color: var(--border) !important;
+}
+
+:host ::ng-deep .sidebar .menu a.active {
+  background: rgba(52, 144, 255, 0.22) !important;
+  border-color: rgba(52, 144, 255, 0.35) !important;
+}
+
+:host ::ng-deep .sidebar .menu .ico {
+  width: 20px !important;
+  text-align: center !important;
+}
+
+/* Asegurar colapso/expand del grid */
+:host ::ng-deep .admin { transition: grid-template-columns .25s ease; }
+:host ::ng-deep .admin.is-collapsed { grid-template-columns: 0 1fr !important; }
+:host ::ng-deep .admin.is-collapsed .sidebar{
+  width: 0 !important; padding: 0 !important; border: 0 !important;
+  opacity: 0 !important; pointer-events: none !important;
+}
+
+/* Tamaño del logo en el ndnd (opcional) */

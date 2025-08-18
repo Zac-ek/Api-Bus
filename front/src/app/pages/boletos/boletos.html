@@ -25,27 +25,6 @@
         <label><input type="checkbox" [(ngModel)]="slotEnabled.tarde" (change)="onToggleSlot()"> Tarde (12–18)</label>
         <label><input type="checkbox" [(ngModel)]="slotEnabled.noche" (change)="onToggleSlot()"> Noche (18–24)</label>
       </div>
-
-      <div class="card" *ngIf="clases.length">
-        <h3>Clase</h3>
-        <label *ngFor="let c of clases">
-          <input type="checkbox" [ngModel]="selectedClases.has(c)" (ngModelChange)="toggleClase(c, $event)">
-          {{ c }}
-        </label>
-      </div>
-
-      <div class="card" *ngIf="priceMax > 0">
-        <h3>Precio máximo</h3>
-        <div class="range">
-          <input type="range" [min]="priceMin" [max]="priceMax" [step]="10" [ngModel]="priceMaxFilter"
-            (ngModelChange)="onPriceChange($event)">
-          <div class="range-values">
-            <span>${{ priceMin }}</span>
-            <strong>${{ priceMaxFilter }}</strong>
-            <span>${{ priceMax }}</span>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <!-- Lista de resultados -->
