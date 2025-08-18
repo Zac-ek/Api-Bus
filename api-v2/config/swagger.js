@@ -34,15 +34,16 @@ const options = {
   apis: [
     './routes/*.js',
     './controllers/*.js',
-    './docs/auth.docs.js',
-    './docs/autobuses.docs.js',
-    './docs/boletos.docs.js',
-    './docs/horarios.docs.js',    
-    './docs/personas.docs.js',
-    './docs/rutas.docs.js',
-    './docs/trabajadores.docs.js',
-    './docs/usuarios.docs.js',
-    './docs/viajes.docs.js',
+    './docs/*.js',
+    // './docs/autobuses.docs.js',
+    // './docs/boletos.docs.js',
+    // './docs/horarios.docs.js',    
+    // './docs/personas.docs.js',
+    // './docs/rutas.docs.js',
+    // './docs/trabajadores.docs.js',
+    // './docs/usuarios.docs.js',
+    // './docs/viajes.docs.js',
+    // './docs/recomendations.docs.js',
   ], // Ruta a tus archivos de rutas y controladores
 };
 

@@ -19,7 +19,7 @@ const run = async () => {
 
 
     // 1) Personas (con algunas tipo 'trabajador')
-    const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 40, 0.30);
+    const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 400, 0.30);
 
     // 2) Usuarios (1:1 con Persona) + mapa personaId -> usuario
     const { usuarios, mapPersonaToUsuario } = await seedUsuarios({ ...ctx, personas }, 3);
@@ -35,11 +35,11 @@ const run = async () => {
     const autobuses = await seedAutobuses({ ...ctx, conductores }, 100);
 
     // 5) Rutas, horarios y boletos
-    const rutas = await seedRutas({ ...ctx, autobuses }, 28);
-    const horarios = await seedHorarios({ ...ctx, rutas }, 3);
+    const rutas = await seedRutas({ ...ctx, autobuses }, 80);
+    const horarios = await seedHorarios({ ...ctx, rutas }, 5);
 
 
-    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 40, 100);
+    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 50, 100);
 
     console.log('✅ Seed completo');
     process.exit(0);

@@ -13,6 +13,7 @@ import hoariosRoutes from './routes/horarios.routes.js';
 import rutaRoutes from './routes/rutas.routes.js';
 import trabajadorRoutes from './routes/trabajadores.routes.js';
 import viajeRoutes from './routes/viajes.routes.js';
+import recomendacionRoutes from './routes/recomendation.routes.js';
 
 import cors from 'cors';
 
@@ -33,6 +34,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/horarios', hoariosRoutes);
 app.use('/api/rutas', rutaRoutes);
 app.use('/api/trabajadores', trabajadorRoutes);
+app.use('/api/recomendaciones', recomendacionRoutes);
 
 swaggerDocs(app);
 
