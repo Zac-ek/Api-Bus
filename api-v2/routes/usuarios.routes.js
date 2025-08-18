@@ -6,10 +6,11 @@ import {
   updateUsuario,
   deleteUsuario,
   hardDeleteUsuario
-} from '../controllers/usuario.js';
+} from '../controllers/usuarios.controller.js';
 import { authenticate, authorize } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
 
 // Rutas públicas
 router.post('/', createUsuario);
@@ -18,12 +19,12 @@ router.post('/', createUsuario);
 router.use(authenticate);
 
 // Rutas básicas CRUD
-router.get('/', authorize(['admin']), getAllUsuarios);
+router.get('/', authorize(['administrativo']), getAllUsuarios);
 router.get('/:id', getUsuarioById);
 router.put('/:id', updateUsuario);
 router.delete('/:id', deleteUsuario);
 
 // Ruta especial para admin (eliminación permanente)
-router.delete('/:id/hard', authorize(['admin']), hardDeleteUsuario);
+router.delete('/:id/hard', authorize(['administrativo']), hardDeleteUsuario);
 
 export default router;

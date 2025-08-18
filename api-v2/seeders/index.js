@@ -17,6 +17,7 @@ const run = async () => {
 
     const ctx = { models: sequelize.models };
 
+
     // 1) Personas (con algunas tipo 'trabajador')
     const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 40, 0.30);
 
@@ -31,11 +32,12 @@ const run = async () => {
 
     // 4) Autobuses con conductores válidos
     const conductores = trabajadores.filter(t => t.puesto === 'conductor');
-    const autobuses = await seedAutobuses({ ...ctx, conductores }, 14);
+    const autobuses = await seedAutobuses({ ...ctx, conductores }, 30);
 
     // 5) Rutas, horarios y boletos
     const rutas = await seedRutas({ ...ctx, autobuses }, 28);
     const horarios = await seedHorarios({ ...ctx, rutas }, 3);
+
 
     await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 10, 100);
 

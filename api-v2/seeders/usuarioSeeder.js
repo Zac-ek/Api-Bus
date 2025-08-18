@@ -2,6 +2,7 @@
 import { faker } from '@faker-js/faker';
 
 export const seedUsuarios = async ({ models, personas, personasAdminIds = [] }) => {
+
   const { Usuario } = models;
   const usuarios = [];
   const mapPersonaToUsuario = new Map();
@@ -11,6 +12,7 @@ export const seedUsuarios = async ({ models, personas, personasAdminIds = [] }) 
     ADMIN001: { usuario: 'admin.carlos', correo: 'admin.carlos@demo.com', password: 'Admin#Carlos2025' },
     ADMIN002: { usuario: 'admin.maria',  correo: 'admin.maria@demo.com',  password: 'Admin#Maria2025'  },
   };
+
 
   for (const persona of personas) {
     // ¿Es uno de los admins fijos?
