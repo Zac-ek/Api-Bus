@@ -1,74 +1,56 @@
 // seeders/usuarioSeeder.js
 import { faker } from '@faker-js/faker';
 
-const normalizeLocalPart = (str) =>
-  str
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .replace(/^\.|\.$/g, '')               // quita '.' al inicio/fin
-    .toLowerCase();
+export const seedUsuarios = async ({ models, personas, personasAdminIds = [] }) => {
 
-
-const generateUniqueEmail = async (Usuario, baseLocalPart, domain) => {
-  let counter = 0;
-  let candidate;
-  // Evita bucles infinitos; en práctica no se llega ni de cerca.
-  const MAX_TRIES = 10000;
-
-  do {
-    const suffix = counter === 0 ? '' : String(counter);
-    candidate = `${baseLocalPart}${suffix}@${domain}`.toLowerCase();
-
-    const existe = await Usuario.findOne({
-      where: { correo_electronico: candidate },
-      attributes: ['id'],
-    });
-
-    if (!existe) return candidate;
-    counter += 1;
-  } while (counter < MAX_TRIES);
-
-  throw new Error('No se pudo generar un correo único después de muchos intentos.');
-};
-
-export const seedUsuarios = async ({ models, personas }, cantidadAdmins = 5) => {
   const { Usuario } = models;
   const usuarios = [];
+  const mapPersonaToUsuario = new Map();
 
-  for (let i = 0; i < personas.length; i++) {
-    const persona = personas[i];
+  // Para identificar admins por defecto por su documento_identidad (opcional)
+  const adminCredsFijas = {
+    ADMIN001: { usuario: 'admin.carlos', correo: 'admin.carlos@demo.com', password: 'Admin#Carlos2025' },
+    ADMIN002: { usuario: 'admin.maria',  correo: 'admin.maria@demo.com',  password: 'Admin#Maria2025'  },
+  };
 
-    // Username "legible" a partir de nombre y primer apellido
-    const username = normalizeLocalPart(`${persona.nombre}.${persona.primer_apellido}`);
 
-    // Dominio aleatorio y local part base normalizado
-    // (si prefieres un dominio fijo de tu proyecto, cámbialo por 'bytebuss.com' por ejemplo)
-    const fakeEmail = faker.internet.email({
-      firstName: persona.nombre,
-      lastName: persona.primer_apellido,
-    }).toLowerCase();
+  for (const persona of personas) {
+    // ¿Es uno de los admins fijos?
+    let usuario, correo, password;
+    if (adminCredsFijas[persona.documento_identidad]) {
+      ({ usuario, correo, password } = adminCredsFijas[persona.documento_identidad]);
+    } else {
+      usuario = faker.internet.username({
+        firstName: persona.nombre,
+        lastName: persona.primer_apellido
+      }).toLowerCase();
 
-    const [rawLocal, rawDomain] = fakeEmail.split('@');
-    const baseLocalPart = normalizeLocalPart(rawLocal || username || 'user');
-    const domain = rawDomain || 'example.com';
+      correo = faker.internet.email({
+        firstName: persona.nombre,
+        lastName: persona.primer_apellido
+      }).toLowerCase();
 
-    // Garantiza correo único en BD
-    const correo = await generateUniqueEmail(Usuario, baseLocalPart, domain);
+      password = 'Secret123*'; // tu setter/hook debería hashearla
+    }
 
+    // Evita colisiones simples de username/correo
+    const rand = faker.string.alphanumeric({ length: 4 }).toLowerCase();
     const u = await Usuario.create({
       personaId: persona.id,
-      usuario: username,
+      usuario,
       correo_electronico: correo,
       telefono: faker.phone.number('+52##########'),
-      contrasena_hash: 'Secret123*', // tu setter lo hashea con bcrypt
+      contrasena_hash: password,   // <- setter/hook hashea
       estado: 'activo',
       is_active: true,
-      is_staff: i < cantidadAdmins,
+      is_staff: persona.tipo === 'administrador', // ← clave
     });
 
     usuarios.push(u);
+    mapPersonaToUsuario.set(persona.id, u);
   }
 
-  console.log(`🧑‍💻 Usuarios creados: ${usuarios.length} (staff: ${cantidadAdmins})`);
-  return usuarios;
+  const totalStaff = usuarios.filter(x => x.is_staff).length;
+  console.log(`🧑‍💻 Usuarios: ${usuarios.length} (staff: ${totalStaff})`);
+  return { usuarios, mapPersonaToUsuario };
 };

@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 
 const GENERO = ['M', 'F', 'O'];
-const TIPO = ['usuario', 'acompanante', 'externo'];
+const TIPO = ['usuario', 'acompanante', 'externo', 'trabajador', 'administrador'];
 
 const Persona = sequelize.define(
   'Persona',
