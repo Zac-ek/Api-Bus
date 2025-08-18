@@ -18,7 +18,12 @@ const Boleto = sequelize.define(
       references: { model: 'Usuarios', key: 'id' },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
-      field: 'usuario_id',                 // ✅ mapea a snake_case explícito
+      field: 'usuario_id',
+    },
+    // nuevo campo para almacenar nombre del usuario
+    nombre_usuario: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
     rutaId: {
       type: DataTypes.BIGINT.UNSIGNED,
@@ -75,7 +80,6 @@ const Boleto = sequelize.define(
     indexes: [
       {
         unique: true,
-        // ✅ usa los NOMBRES DE COLUMNA reales (snake_case)
         fields: ['autobus_id', 'fecha_viaje', 'asiento_numero', 'horario_id'],
       },
     ],
