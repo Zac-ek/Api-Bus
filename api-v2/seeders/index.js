@@ -1,6 +1,6 @@
 // seeders/index.js
 import sequelize from '../config/db.js';
-import '../models/index.js'; // asegúrate que registra todas las asociaciones
+import '../models/index.js';
 
 import { seedPersonas } from './personaSeeder.js';
 import { seedUsuarios } from './usuarioSeeder.js';
@@ -13,19 +13,31 @@ import { seedBoletos } from './boletoSeeder.js';
 const run = async () => {
   try {
     console.log('🔄 sync...');
-    await sequelize.sync({ force: true }); // Borra y recrea tablas
+    await sequelize.sync({ force: true }); // ⚠️ borra y recrea tablas
 
     const ctx = { models: sequelize.models };
 
-    const personas = await seedPersonas(ctx, 1000);
-    const usuarios = await seedUsuarios({ ...ctx, personas }, 3);
-    const trabajadores = await seedTrabajadores({ ...ctx, usuarios }, 0.5);
 
+    // 1) Personas (con algunas tipo 'trabajador')
+    const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 40, 0.30);
+
+    // 2) Usuarios (1:1 con Persona) + mapa personaId -> usuario
+    const { usuarios, mapPersonaToUsuario } = await seedUsuarios({ ...ctx, personas }, 3);
+
+    // 3) Trabajadores solo para personas tipo 'trabajador'
+    const trabajadores = await seedTrabajadores(
+      { ...ctx, personasTrabajadorIds, mapPersonaToUsuario },
+      0.45 // ~45% conductores
+    );
+
+    // 4) Autobuses con conductores válidos
     const conductores = trabajadores.filter(t => t.puesto === 'conductor');
     const autobuses = await seedAutobuses({ ...ctx, conductores }, 100);
 
-    const rutas = await seedRutas({ ...ctx, autobuses }, 80);
-    const horarios = await seedHorarios({ ...ctx, rutas }, 5);
+    // 5) Rutas, horarios y boletos
+    const rutas = await seedRutas({ ...ctx, autobuses }, 28);
+    const horarios = await seedHorarios({ ...ctx, rutas }, 3);
+
 
     await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 40, 100);
 

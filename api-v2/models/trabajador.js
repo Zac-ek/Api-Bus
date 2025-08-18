@@ -1,4 +1,3 @@
-// models/trabajador.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 
@@ -21,9 +20,22 @@ const Trabajador = sequelize.define(
   { tableName: 'Trabajadores', timestamps: true, underscored: true }
 );
 
-// 🔑 ASOCIACIONES
+// 🔑 Asociaciones
 Trabajador.associate = (models) => {
   Trabajador.belongsTo(models.Usuario, { as: 'usuario', foreignKey: 'usuarioId' });
 };
+
+// ✅ Hook: asegurar que el usuario exista y su Persona sea de tipo 'trabajador'
+Trabajador.addHook('beforeSave', async (t) => {
+  if (!t.usuarioId) return;
+  const { Usuario, Persona } = sequelize.models;
+  const u = await Usuario.findByPk(t.usuarioId, { attributes: ['personaId'] });
+  if (!u) throw new Error('El usuario asociado no existe.');
+  if (!u.personaId) throw new Error('El usuario no tiene persona asociada.');
+  const p = await Persona.findByPk(u.personaId, { attributes: ['tipo'] });
+  if (!p || p.tipo !== 'trabajador') {
+    throw new Error('La Persona asociada al usuario debe tener tipo "trabajador".');
+  }
+});
 
 export default Trabajador;
