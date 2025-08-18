@@ -1,0 +1,150 @@
+<section class="checkout">
+
+  <!-- Stepper -->
+  <nav class="stepper">
+    <div class="step done">
+      <span class="bubble">1</span><span class="label">Viaje</span>
+    </div>
+    <div class="divider"></div>
+    <div class="step active">
+      <span class="bubble">2</span><span class="label">Asientos</span>
+    </div>
+    <div class="divider"></div>
+    <div class="step">
+      <span class="bubble">3</span><span class="label">Pasajeros</span>
+    </div>
+    <div class="divider"></div>
+    <div class="step">
+      <span class="bubble">4</span><span class="label">Pago</span>
+    </div>
+  </nav>
+
+  <!-- Encabezado de viaje -->
+  <header class="trip-head">
+    <div class="route">
+      <h1>{{ origen }} <span>→</span> {{ destino }}</h1>
+      <p>{{ salida | date:"EEEE d 'de' MMMM, y · HH:mm" | titlecase }}</p>
+    </div>
+    <div class="meta">
+      <span class="pill">{{ seatmap?.busType || '2+2' }}</span>
+      <span class="dot"></span>
+      <span class="pill">{{ selected.length }} / {{ pasajeros }} seleccionados</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- Columna izquierda -->
+    <main class="left">
+
+      <!-- Pasajeros -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Pasajeros</h3>
+        </div>
+        <div class="row pax-row">
+          <label for="pax">Cantidad</label>
+          <select id="pax" [(ngModel)]="pasajeros" (ngModelChange)="onPaxChange($event)">
+            <option *ngFor="let n of [1,2,3,4,5,6]" [value]="n">{{ n }}</option>
+          </select>
+          <small>Selecciona exactamente {{ pasajeros }} asiento{{ pasajeros>1?'s':'' }}.</small>
+        </div>
+      </div>
+
+      <!-- Selección de asientos -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Selecciona tus asientos</h3>
+        </div>
+
+        <!-- Cargando / Error -->
+        <div class="state" *ngIf="loading">Cargando asientos…</div>
+        <div class="state error" *ngIf="!loading && error">{{ error }}</div>
+
+        <!-- Silueta del camión -->
+        <ng-container *ngIf="!loading && !error && seatmap as sm">
+          <div class="coach-silhouette">
+            <div class="front">Conductor</div>
+
+            <!-- Grid de asientos -->
+            <div class="seat-grid" [style.--cols]="sm.cols" [style.--aisle-after]="sm.aisleAfter">
+              <ng-container *ngFor="let s of sm.seats; trackBy: seatTrack">
+                <button class="seat" [class.taken]="s.status==='taken'" [class.blocked]="s.status==='blocked'"
+                  [class.pref]="s.status==='pref'" [class.selected]="isSelected(s.num)" (click)="toggle(s)"
+                  [disabled]="s.status==='taken'||s.status==='blocked'">
+                  <span>{{ s.num }}</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="legend">
+              <span class="dot free"></span> Disponible
+              <span class="dot selected"></span> Seleccionado
+              <span class="dot taken"></span> Ocupado
+              <span class="dot pref"></span> Preferente
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <!-- Detalles de viaje -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Detalles del viaje</h3>
+        </div>
+
+        <div class="trip-details">
+          <div>
+            <div class="time">{{ salida | date:'HH:mm' }}</div>
+            <div class="place">{{ origen }}</div>
+          </div>
+          <div class="arrow">→</div>
+          <div>
+            <div class="time">{{ llegada | date:'HH:mm' }}</div>
+            <div class="place">{{ destino }}</div>
+          </div>
+          <div class="sep"></div>
+          <div class="info">
+            <span class="badge">Empresa</span> {{ seatmap?.tripId ? ' ByteBuss' : ' —' }}
+            <span class="dot"></span>
+            <span class="badge">Duración</span> {{ duracion() }}
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Columna derecha: resumen -->
+    <aside class="right">
+      <div class="summary card">
+        <div class="card-head">
+          <h3>Resumen</h3>
+        </div>
+
+        <div class="sum-row">
+          <span>Tarifa por asiento</span>
+          <strong>{{ precio | currency:'MXN':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+
+        <div class="sum-row" *ngIf="selected.length">
+          <span>Asientos</span>
+          <strong>#{{ selected.join(', #') }}</strong>
+        </div>
+
+        <hr>
+
+        <div class="sum-row total">
+          <span>Total</span>
+          <strong>{{ total() | currency:'MXN':'symbol-narrow':'1.0-0' }}</strong>
+        </div>
+
+        <button class="btn-primary" [disabled]="!canContinue()" (click)="continuar()">
+          Continuar
+        </button>
+
+        <p class="hint">Debes seleccionar {{ pasajeros }} asiento{{ pasajeros>1?'s':'' }}.</p>
+      </div>
+    </aside>
+  </div>
+</section>

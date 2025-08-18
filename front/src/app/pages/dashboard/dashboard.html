@@ -1,0 +1,76 @@
+<section class="dash">
+  <h2>Panel de Administración</h2>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <span class="k-label">Viajes realizados</span>
+      <span class="k-value">{{ viajes | number }}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">Boletos vendidos</span>
+      <span class="k-value">{{ boletos | number }}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">Ingresos mensuales</span>
+      <span class="k-value">{{ ingresos | currency:'MXN':'symbol-narrow':'1.0-0' }}</span>
+    </div>
+  </div>
+
+  <!-- Fila de gráficas -->
+  <div class="grid">
+    <div class="card">
+      <h3>Lugares mas visitados y las ganancias que generan</h3>
+      <canvas baseChart [data]="barData" [options]="barOptions" chartType="bar"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Choferes con más viajes del mes</h3>
+      <canvas baseChart [data]="lineData" [options]="lineOptions" chartType="line"></canvas>
+    </div>
+  </div>
+
+  <!-- Tabla y dona -->
+  <div class="grid">
+    <div class="card span-2-1">
+      <h3>Rendimiento de choferes</h3>
+      <table class="drivers">
+        <thead>
+          <tr>
+            <th>Chofer</th>
+            <th>Viajes</th>
+            <th>⭐</th>
+            <th>★ Eval</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of choferes">
+            <td class="name">
+              <div class="avatar">{{ c.nombre[0] }}</div>
+              <span>{{ c.nombre }}</span>
+            </td>
+            <td>{{ c.viajes }}</td>
+            <td>{{ c.rating | number:'1.1-1' }}</td>
+            <td>{{ c.eval | number:'1.1-1' }}</td>
+            <td>
+              <span class="dot" [class.ok]="c.estado==='Apto'" [class.warn]="c.estado==='Rev'"
+                [class.bad]="c.estado==='No'"></span>
+              {{ c.estado }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Asistencia de choferes</h3>
+      <canvas baseChart [data]="doughnutData" [options]="doughnutOptions" chartType="doughnut"></canvas>
+      <div class="legend">
+        <div><span class="swatch asistio"></span> Asistió</div>
+        <div><span class="swatch permiso"></span> Permiso</div>
+        <div><span class="swatch ausente"></span> Ausente</div>
+      </div>
+    </div>
+  </div>
+</section>
