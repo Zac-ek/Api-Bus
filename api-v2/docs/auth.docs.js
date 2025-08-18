@@ -1,9 +1,3 @@
-import express from 'express';
-import { login, verifyAuth } from '../controllers/authController.js';
-import { authenticate } from '../middlewares/authMiddleware.js';
-
-const router = express.Router();
-
 /**
  * @swagger
  * tags:
@@ -63,7 +57,6 @@ const router = express.Router();
  *       500:
  *         description: Error del servidor
  */
-router.post('/login', login);
 
 /**
  * @swagger
@@ -97,6 +90,3 @@ router.post('/login', login);
  *       500:
  *         description: Error del servidor
  */
-router.get('/verify', authenticate, verifyAuth);
-
-export default router;

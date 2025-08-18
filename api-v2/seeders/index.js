@@ -17,15 +17,15 @@ const run = async () => {
 
     const ctx = { models: sequelize.models };
 
-    const personas = await seedPersonas(ctx, 40);
+    const personas = await seedPersonas(ctx, 200);
     const usuarios = await seedUsuarios({ ...ctx, personas }, 3);
     const trabajadores = await seedTrabajadores({ ...ctx, usuarios }, 0.5);
 
     const conductores = trabajadores.filter(t => t.puesto === 'conductor');
-    const autobuses = await seedAutobuses({ ...ctx, conductores }, 14);
+    const autobuses = await seedAutobuses({ ...ctx, conductores }, 30);
 
-    const rutas = await seedRutas({ ...ctx, autobuses }, 28);
-    const horarios = await seedHorarios({ ...ctx, rutas }, 3);
+    const rutas = await seedRutas({ ...ctx, autobuses }, 20);
+    const horarios = await seedHorarios({ ...ctx, rutas }, 5);
 
     await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 10, 100);
 

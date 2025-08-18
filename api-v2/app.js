@@ -4,9 +4,14 @@ import sequelize, { testConnection } from './config/db.js';
 import { ensureDatabase } from './config/ensureDb.js'; // opcional
 import swaggerDocs from './config/swagger.js';
 import './models/index.js'; // IMPORTANTE: registra modelos y asociaciones
-import authRoutes from './routes/authRoutes.js';
-import personaRoutes from './routes/persona.js';
-import usuarioRoutes from './routes/usuario.js';
+import authRoutes from './routes/auth.routes.js';
+import autobusRoutes from './routes/autobus.routes.js';
+import boletosRoutes from './routes/boletos.routes.js';
+import personaRoutes from './routes/personas.routes.js';
+import usuarioRoutes from './routes/usuarios.routes.js';
+import hoariosRoutes from './routes/horarios.routes.js';
+import rutaRoutes from './routes/rutas.routes.js';
+import trabajadorRoutes from './routes/trabajadores.routes.js';
 import viajeRoutes from './routes/viajes.routes.js';
 
 import cors from 'cors';
@@ -21,8 +26,13 @@ app.use(express.json());
 
 app.use('/api', viajeRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/autobuses', autobusRoutes);
+app.use('/api/boletos', boletosRoutes);
 app.use('/api/personas', personaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/horarios', hoariosRoutes);
+app.use('/api/rutas', rutaRoutes);
+app.use('/api/trabajadores', trabajadorRoutes);
 
 swaggerDocs(app);
 
