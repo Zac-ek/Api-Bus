@@ -1,233 +1,172 @@
-import Trabajador from '../models/trabajador.js';
-import Usuario from '../models/usuario.js';
-import { Op } from 'sequelize';
+// controllers/trabajadores.controller.js
+import sequelize from "../config/db.js";
+// Obtén los modelos ya inicializados y asociados
+const { Trabajador, Usuario, Persona } = sequelize.models;
 
 /**
- * Obtener todos los trabajadores con filtros
+ * GET /api/trabajadores
+ * Filtros: ?puesto=conductor&turno=matutino
  */
 export const getAllTrabajadores = async (req, res) => {
   try {
     const { puesto, turno } = req.query;
-    
+
+    // 🔹 Paginación segura
+    const limit = Math.min(parseInt(req.query.limit ?? "50", 10) || 50, 200);
+    const page = Math.max(parseInt(req.query.page ?? "1", 10) || 1, 1);
+    const offset = (page - 1) * limit;
+
     const where = {};
     if (puesto) where.puesto = puesto;
     if (turno) where.turno = turno;
 
-    const trabajadores = await Trabajador.findAll({
+    const { count, rows } = await Trabajador.findAndCountAll({
       where,
+      attributes: [
+        "id",
+        "puesto",
+        "turno",
+        "fecha_ingreso",
+        "usuarioId",
+        "created_at",
+        "updated_at",
+      ],
       include: [
         {
-          association: 'usuario',
-          attributes: ['id', 'correo_electronico', 'estado'],
-          include: ['persona']
-        }
+          model: Usuario,
+          as: "usuario",
+          attributes: ["id", "correo_electronico", "estado", "personaId"],
+          include: [
+            {
+              model: Persona,
+              as: "persona",
+              attributes: [
+                "nombre",
+                "primer_apellido",
+                "segundo_apellido",
+                "documento_identidad",
+                "tipo",
+              ],
+            },
+          ],
+        },
       ],
-      order: [['fecha_ingreso', 'DESC']]
+      order: [["fecha_ingreso", "DESC"]],
+      limit,
+      offset,
     });
 
     res.json({
       success: true,
-      count: trabajadores.length,
-      data: trabajadores
+      page,
+      pages: Math.ceil(count / limit),
+      total: count,
+      limit,
+      data: rows,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error al obtener trabajadores',
-      error: error.message
+      message: "Error al obtener trabajadores",
+      error: error.message,
     });
   }
 };
 
 /**
- * Obtener un trabajador por ID
+ * GET /api/trabajadores/:id
  */
 export const getTrabajadorById = async (req, res) => {
   try {
     const trabajador = await Trabajador.findByPk(req.params.id, {
       include: [
         {
-          association: 'usuario',
-          include: ['persona']
-        }
-      ]
+          model: Usuario,
+          as: "usuario",
+          include: [
+            {
+              model: Persona,
+              as: "persona",
+              attributes: [
+                "nombre",
+                "primer_apellido",
+                "segundo_apellido",
+                "documento_identidad",
+                "tipo",
+              ],
+              required: false,
+            },
+          ],
+        },
+      ],
     });
 
     if (!trabajador) {
-      return res.status(404).json({
-        success: false,
-        message: 'Trabajador no encontrado'
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Trabajador no encontrado" });
     }
 
-    res.json({
-      success: true,
-      data: trabajador
-    });
+    res.json({ success: true, data: trabajador });
   } catch (error) {
+    console.error("getTrabajadorById error:", error);
     res.status(500).json({
       success: false,
-      message: 'Error al obtener trabajador',
-      error: error.message
+      message: "Error al obtener trabajador",
+      error: error.message,
     });
   }
 };
 
 /**
- * Crear un nuevo trabajador
- */
-export const createTrabajador = async (req, res) => {
-  try {
-    // Validar usuario único si se proporciona
-    if (req.body.usuarioId) {
-      const exists = await Trabajador.findOne({ 
-        where: { usuarioId: req.body.usuarioId }
-      });
-      if (exists) {
-        return res.status(400).json({
-          success: false,
-          message: 'El usuario ya está asignado a otro trabajador'
-        });
-      }
-
-      // Verificar que el usuario existe
-      const usuario = await Usuario.findByPk(req.body.usuarioId);
-      if (!usuario) {
-        return res.status(400).json({
-          success: false,
-          message: 'El usuario especificado no existe'
-        });
-      }
-    }
-
-    const trabajador = await Trabajador.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      data: trabajador
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Error al crear trabajador',
-      error: error.message
-    });
-  }
-};
-
-/**
- * Actualizar un trabajador existente
- */
-export const updateTrabajador = async (req, res) => {
-  try {
-    const trabajador = await Trabajador.findByPk(req.params.id);
-    if (!trabajador) {
-      return res.status(404).json({
-        success: false,
-        message: 'Trabajador no encontrado'
-      });
-    }
-
-    // Validar usuario único si se está actualizando
-    if (req.body.usuarioId && req.body.usuarioId !== trabajador.usuarioId) {
-      const exists = await Trabajador.findOne({ 
-        where: { usuarioId: req.body.usuarioId }
-      });
-      if (exists) {
-        return res.status(400).json({
-          success: false,
-          message: 'El usuario ya está asignado a otro trabajador'
-        });
-      }
-
-      // Verificar que el usuario existe
-      const usuario = await Usuario.findByPk(req.body.usuarioId);
-      if (!usuario) {
-        return res.status(400).json({
-          success: false,
-          message: 'El usuario especificado no existe'
-        });
-      }
-    }
-
-    await trabajador.update(req.body);
-
-    res.json({
-      success: true,
-      data: trabajador
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: 'Error al actualizar trabajador',
-      error: error.message
-    });
-  }
-};
-
-/**
- * Eliminar un trabajador
- */
-export const deleteTrabajador = async (req, res) => {
-  try {
-    const trabajador = await Trabajador.findByPk(req.params.id);
-    if (!trabajador) {
-      return res.status(404).json({
-        success: false,
-        message: 'Trabajador no encontrado'
-      });
-    }
-
-    await trabajador.destroy();
-
-    res.json({
-      success: true,
-      message: 'Trabajador eliminado correctamente'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al eliminar trabajador',
-      error: error.message
-    });
-  }
-};
-
-/**
- * Buscar trabajadores por puesto
+ * GET /api/trabajadores/puesto/:puesto
  */
 export const getTrabajadoresByPuesto = async (req, res) => {
   try {
     const { puesto } = req.params;
-    
-    if (!['conductor', 'supervisor', 'mantenimiento', 'administrativo'].includes(puesto)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Puesto no válido'
-      });
+
+    if (
+      !["conductor", "supervisor", "mantenimiento", "administrativo"].includes(
+        puesto
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Puesto no válido" });
     }
 
     const trabajadores = await Trabajador.findAll({
       where: { puesto },
       include: [
         {
-          association: 'usuario',
-          attributes: ['id', 'correo_electronico'],
-          include: ['persona']
-        }
-      ]
+          model: Usuario,
+          as: "usuario",
+          attributes: ["id", "correo_electronico", "estado", "personaId"],
+          include: [
+            {
+              model: Persona,
+              as: "persona",
+              attributes: [
+                "nombre",
+                "primer_apellido",
+                "segundo_apellido",
+                "documento_identidad",
+                "tipo",
+              ],
+              required: false,
+            },
+          ],
+        },
+      ],
     });
 
-    res.json({
-      success: true,
-      count: trabajadores.length,
-      data: trabajadores
-    });
+    res.json({ success: true, count: trabajadores.length, data: trabajadores });
   } catch (error) {
+    console.error("getTrabajadoresByPuesto error:", error);
     res.status(500).json({
       success: false,
-      message: 'Error al obtener trabajadores por puesto',
-      error: error.message
+      message: "Error al obtener trabajadores por puesto",
+      error: error.message,
     });
   }
 };
