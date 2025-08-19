@@ -30,11 +30,13 @@ const run = async () => {
       3
     );
 
+
     // 3) Trabajadores solo para personas tipo 'trabajador'
     const trabajadores = await seedTrabajadores(
       { ...ctx, personasTrabajadorIds, mapPersonaToUsuario },
       0.45 // ~45% conductores
     );
+
 
     // 4) Autobuses con conductores válidos
     const conductores = trabajadores.filter((t) => t.puesto === "conductor");
@@ -42,6 +44,7 @@ const run = async () => {
 
     // 5) Rutas, horarios y boletos
     const rutas = await seedRutas({ ...ctx, autobuses }, 10000);
+
     const horarios = await seedHorarios({ ...ctx, rutas }, 3);
 
     await seedBoletos(
@@ -52,6 +55,7 @@ const run = async () => {
     );
 
     console.log("✅ Seed completo");
+
     process.exit(0);
   } catch (e) {
     console.error("❌ Error en seed:", e);
