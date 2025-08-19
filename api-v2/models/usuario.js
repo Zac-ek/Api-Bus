@@ -1,25 +1,26 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/db.js';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
-const ESTADO = ['activo', 'inactivo'];
+const ESTADO = ["activo", "inactivo"];
 
 const Usuario = sequelize.define(
-  'Usuario',
+  "Usuario",
   {
     id: {
-      type: DataTypes.BIGINT.UNSIGNED,     // ✅ PK consistente
+      type: DataTypes.BIGINT.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
     personaId: {
-      type: DataTypes.BIGINT.UNSIGNED,     // ✅ FK mismo tipo que Personas.id
+      type: DataTypes.BIGINT.UNSIGNED,
       allowNull: true,
-      unique: true,                        // OneToOne con Persona
-      references: { model: 'Personas', key: 'id' },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      unique: true,
+      field: "persona_id", // 👈 asegura correspondencia con la columna
+      references: { model: "Personas", key: "id" },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
     usuario: { type: DataTypes.STRING(255), allowNull: true },
     correo_electronico: {
@@ -33,42 +34,51 @@ const Usuario = sequelize.define(
       type: DataTypes.STRING(128),
       allowNull: true,
       set(value) {
-        this.setDataValue('contrasena_hash', bcrypt.hashSync(value, 10));
-      }
+        this.setDataValue("contrasena_hash", bcrypt.hashSync(value, 10));
+      },
     },
     estado: {
       type: DataTypes.STRING(16),
       allowNull: true,
-      defaultValue: 'activo',
+      defaultValue: "activo",
       validate: { isIn: [ESTADO] },
     },
     is_active: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: true },
     is_staff: { type: DataTypes.BOOLEAN, allowNull: true, defaultValue: false },
-    fecha_registro: { type: DataTypes.DATE, allowNull: true, defaultValue: DataTypes.NOW },
-    ultima_conexion: { type: DataTypes.DATE, allowNull: true, defaultValue: DataTypes.NOW },
+    fecha_registro: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
+    ultima_conexion: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
-    tableName: 'Usuarios',
+    tableName: "Usuarios",
     timestamps: true,
     underscored: true,
   }
 );
 
-// Método para comparar contraseñas
-Usuario.prototype.comparePassword = async function(password) {
+Usuario.prototype.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.contrasena_hash);
 };
 
-// Método para generar token JWT
-Usuario.prototype.generateAuthToken = function() {
+Usuario.prototype.generateAuthToken = function () {
   return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 Usuario.associate = (models) => {
-  Usuario.belongsTo(models.Persona, { as: 'persona', foreignKey: 'personaId' });
-  Usuario.hasOne(models.Trabajador, { as: 'trabajador', foreignKey: 'usuarioId' });
+  Usuario.belongsTo(models.Persona, { as: "persona", foreignKey: "personaId" });
+  Usuario.hasOne(models.Trabajador, {
+    as: "trabajador",
+    foreignKey: "usuarioId",
+  });
 };
 
 export default Usuario;
