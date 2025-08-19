@@ -13,6 +13,12 @@
   --rad: 14px;
 }
 
+.admin-shell{
+  background: var(--bg);
+  color: var(--ink);
+  height: max-content;
+}
+
 .admin {
   display: grid;
   grid-template-columns: 220px 1fr; /* visible por defecto */
@@ -37,8 +43,8 @@
   background: linear-gradient(180deg, #081321, #07101b);
   border-right: 1px solid var(--border);
   padding: 14px 10px;
-
-  width: 220px;
+  height: 100%;
+  width: auto;
   opacity: 1;
   pointer-events: auto;
   overflow: hidden;

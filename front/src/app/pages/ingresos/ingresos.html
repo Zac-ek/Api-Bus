@@ -1,0 +1,53 @@
+<section class="ing">
+  <h1>Ingresos</h1>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="k-label">Ingresos totales</div>
+      <div class="k-value">
+        {{ (resumen?.totales?.ingresos ?? 0) | currency:'MXN':'symbol-narrow':'1.0-0' }}
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="k-label">Gastos totales</div>
+      <div class="k-value">
+        {{ (resumen?.totales?.gastos ?? 0) | currency:'MXN':'symbol-narrow':'1.0-0' }}
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="k-label">Ingresos este mes</div>
+      <div class="k-value">
+        {{ (resumen?.mesActual?.ingresos ?? 0) | currency:'MXN':'symbol-narrow':'1.0-0' }}
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="k-label">Gastos este mes</div>
+      <div class="k-value">
+        {{ (resumen?.mesActual?.gastos ?? 0) | currency:'MXN':'symbol-narrow':'1.0-0' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado -->
+  <div class="empty" *ngIf="loading">Cargando ingresos…</div>
+  <div class="empty" *ngIf="!loading && error">{{ error }}</div>
+
+  <!-- Gráfica -->
+  <div class="card" *ngIf="!loading && !error">
+    <div class="card-header">
+      <h3>Ganancias vs gastos</h3>
+      <div class="legend">
+        <span class="swatch a"></span> Ganancias
+        <span class="swatch p" style="margin-left:14px;"></span> Gastos
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas #chartRef></canvas>
+    </div>
+  </div>
+</section>

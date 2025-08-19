@@ -20,24 +20,32 @@
       <input type="text" placeholder="Buscar" formControlName="q" />
     </div>
 
-    <select formControlName="estado">
-      <option value="todos">Estado</option>
-      <option value="apto">Apto</option>
-      <option value="revision">Revisión</option>
-      <option value="no_apto">No apto</option>
-    </select>
+    <div class="sel">
+      <select formControlName="estado" title="Estado">
+        <option value="" disabled>Estado</option>
+        <option value="apto">Apto</option>
+        <option value="revision">Revisión</option>
+        <option value="no_apto">No apto</option>
+      </select>
+    </div>
 
-    <select formControlName="rutaId">
-      <option value="todas">Ruta</option>
-      <option *ngFor="let r of rutas" [value]="r.id">{{ r.nombre }}</option>
-    </select>
+    <!-- Ruta (decorativo) -->
+    <div class="sel">
+      <select disabled title="Ruta (pronto)">
+        <option value="" selected>Ruta (pronto)</option>
+        <option *ngFor="let r of rutas" [value]="r.id">{{ r.nombre }}</option>
+      </select>
+    </div>
 
-    <select formControlName="ratingMin">
-      <option [value]="0">Calificación</option>
-      <option [value]="3">3.0+</option>
-      <option [value]="4">4.0+</option>
-      <option [value]="4.5">4.5+</option>
-    </select>
+    <!-- Calificación -->
+    <div class="sel">
+      <select formControlName="ratingMin" title="Calificación mínima">
+        <option [value]="0">Calificación</option>
+        <option [value]="3">3.0+</option>
+        <option [value]="4">4.0+</option>
+        <option [value]="4.5">4.5+</option>
+      </select>
+    </div>
   </div>
 
   <!-- Tabla -->
