@@ -29,6 +29,11 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       // (a futuro) viajes/boletos/...
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'choferes',
+        loadComponent: () =>
+          import('./pages/choferes/choferes').then((c) => c.ChoferesComponent),
+      },
     ],
   },
   { path: '**', redirectTo: 'home' },

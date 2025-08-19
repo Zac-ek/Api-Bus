@@ -32,7 +32,6 @@
   grid-template-columns: 220px 1fr;
 }
 
-
 /* Sidebar oscuro (queda colapsado por defecto) */
 .sidebar {
   background: linear-gradient(180deg, #081321, #07101b);
@@ -102,6 +101,7 @@
 .inner {
   padding: 10px;
   background-color: #0a1a33;
+  height: 100%;
 }
 
 /* Tarjetas y KPIs en oscuro */
@@ -166,26 +166,24 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.brand{
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-.title{
-  font-size: 20px;
-  font-weight: 600;
-  color: #cfe2ff;
-  margin-bottom: 10px;
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #cfe2ff;
+    margin-bottom: 10px;
+  }
+
+  .logo {
+    width: 56%;
+    height: 50%;
+  }
 }
-
-.logo{
-  width: 56%;
-  height: 50%;
-}
-}
-
-
 
 /* Chart.js – asegura que los canvas no “floten” */
 :host ::ng-deep canvas {
@@ -206,7 +204,6 @@ justify-content: center;
   }
 }
 
-
 :host ::ng-deep .sidebar .menu {
   display: flex;
   flex-direction: column;
@@ -226,7 +223,7 @@ justify-content: center;
 }
 
 :host ::ng-deep .sidebar .menu a:hover {
-  background: rgba(52, 144, 255, 0.10) !important;
+  background: rgba(52, 144, 255, 0.1) !important;
   border-color: var(--border) !important;
 }
 
@@ -241,11 +238,18 @@ justify-content: center;
 }
 
 /* Asegurar colapso/expand del grid */
-:host ::ng-deep .admin { transition: grid-template-columns .25s ease; }
-:host ::ng-deep .admin.is-collapsed { grid-template-columns: 0 1fr !important; }
-:host ::ng-deep .admin.is-collapsed .sidebar{
-  width: 0 !important; padding: 0 !important; border: 0 !important;
-  opacity: 0 !important; pointer-events: none !important;
+:host ::ng-deep .admin {
+  transition: grid-template-columns 0.25s ease;
+}
+:host ::ng-deep .admin.is-collapsed {
+  grid-template-columns: 0 1fr !important;
+}
+:host ::ng-deep .admin.is-collapsed .sidebar {
+  width: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Tamaño del logo en el ndnd (opcional) */

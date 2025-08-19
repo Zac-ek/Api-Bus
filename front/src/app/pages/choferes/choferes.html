@@ -1,1 +1,97 @@
-<p>choferes works!</p>
+<section class="chg">
+  <h1>Choferes</h1>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="k-title">Activos</div>
+      <div class="k-value">{{ kpiActivos }}</div>
+    </div>
+    <div class="kpi">
+      <div class="k-title">En servicio</div>
+      <div class="k-value">{{ kpiServicio }}</div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters" [formGroup]="form">
+    <div class="field">
+      <span class="ico">🔎</span>
+      <input type="text" placeholder="Buscar" formControlName="q" />
+    </div>
+
+    <select formControlName="estado">
+      <option value="todos">Estado</option>
+      <option value="apto">Apto</option>
+      <option value="revision">Revisión</option>
+      <option value="no_apto">No apto</option>
+    </select>
+
+    <select formControlName="rutaId">
+      <option value="todas">Ruta</option>
+      <option *ngFor="let r of rutas" [value]="r.id">{{ r.nombre }}</option>
+    </select>
+
+    <select formControlName="ratingMin">
+      <option [value]="0">Calificación</option>
+      <option [value]="3">3.0+</option>
+      <option [value]="4">4.0+</option>
+      <option [value]="4.5">4.5+</option>
+    </select>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card">
+    <table class="tbl" *ngIf="!loading; else skel">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estado</th>
+          <th>Calificación</th>
+          <th>Ruta asignada</th>
+          <th>En servicio</th>
+          <th>Viajes/mes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filtrados; trackBy: trackById">
+          <td class="driver">
+            <img *ngIf="c.avatarUrl" [src]="c.avatarUrl" alt="avatar" />
+            <div class="avatar" *ngIf="!c.avatarUrl">{{ iniciales(c.nombre) }}</div>
+            <div class="name">{{ c.nombre }}</div>
+          </td>
+
+          <td><span [class]="estadoChip(c.estado)">{{ c.estado === 'apto' ? 'Apto' : c.estado === 'revision' ?
+              'Revisión' : 'No apto' }}</span></td>
+
+          <td><span class="star">★</span> {{ c.calificacion | number:'1.1-1' }}</td>
+
+          <td>{{ c.rutaAsignada?.nombre || '—' }}</td>
+
+          <td>
+            <span class="dot" [class.on]="c.enServicio"></span>
+            {{ c.enServicio ? 'Sí' : 'No' }}
+          </td>
+
+          <td>{{ c.viajesMes }}</td>
+        </tr>
+
+        <tr *ngIf="filtrados.length === 0">
+          <td class="empty" colspan="6">No hay choferes que coincidan con los filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #skel>
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+    </ng-template>
+
+
+    <div class="table-footer" *ngIf="!loading">
+      <span class="mostrar">Mostrando {{ choferes.length | number }} de {{ total | number }}</span>
+
+      <button class="ghost" (click)="loadMore()" [disabled]="loadingMore || page >= pages">
+        {{ loadingMore ? 'Cargando…' : (page < pages ? 'Cargar más' : 'No hay más' ) }} </button>
+    </div>
+  </div>
+</section>
