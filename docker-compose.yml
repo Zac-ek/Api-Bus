@@ -1,0 +1,99 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password --sql-mode=""
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: apibus
+      MYSQL_USER: apibus
+      MYSQL_PASSWORD: apibus
+    ports:
+      - "3307:3306"             # usa 3307 si ya tienes MySQL local en 3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks:
+      - devnet
+      
+  api_node:
+    build:
+      context: ./api-v2
+      dockerfile: Dockerfile
+    container_name: api_node
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./api-v2/.env
+    volumes:
+      - ./api-v2:/app
+      - /app/node_modules
+    command: sh -c "npm ci || npm install && npm run dev"
+    # si tu app escucha en 127.0.0.1 cambia a 0.0.0.0 en el código
+    networks:
+      - devnet
+    environment:
+      - BD_HOST=mysql
+      - BD_PORT=3306
+      - BD_NAME=apibus
+      - BD_USER=apibus
+      - BD_PASSWORD=apibus
+      - RECO_API_BASE=http://api_flask:5000
+    depends_on:
+      mysql:
+        condition: service_healthy
+      api_flask:
+        condition: service_healthy 
+
+  api_flask:
+    build:
+      context: ./api-v2/recomendations
+      dockerfile: Dockerfile
+    container_name: api_flask
+    # La mayoría de apps Flask corren en 5000 dentro del contenedor
+    ports:
+      - "5001:5000"
+    #env_file:
+    #  - ./api-v2/recomendations/.env
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:5000/health', timeout=2).getcode()==200 else sys.exit(1)\""]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - ./api-v2/recomendations:/app
+    command: sh -c "python app.py"
+    networks:
+      - devnet
+
+  front_angular:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: front_angular
+    ports:
+      - "4200:4200"
+    environment:
+      # Para que el watcher funcione bien en Docker/WSL/Windows
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    # ng serve dentro del contenedor, accesible desde el host
+    command: sh -c "npx ng serve --host 0.0.0.0 --port 4200 --poll 2000"
+    depends_on:
+      - api_node
+      - api_flask
+    networks:
+      - devnet
+
+networks:
+  devnet:
+    driver: bridge
+
+volumes:
+  mysql-data:

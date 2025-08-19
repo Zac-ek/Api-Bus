@@ -25,6 +25,7 @@ app.use(cors());
 
 app.use(express.json());
 
+app.get('/health', (_, res) => res.sendStatus(200));
 app.use('/api', viajeRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/autobuses', autobusRoutes);
@@ -34,7 +35,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/horarios', hoariosRoutes);
 app.use('/api/rutas', rutaRoutes);
 app.use('/api/trabajadores', trabajadorRoutes);
-app.use('/api/recomendaciones', recomendacionRoutes);
+app.use('/api', recomendacionRoutes);
 
 swaggerDocs(app);
 
@@ -53,7 +54,7 @@ const startServer = async () => {
     await sequelize.sync({ alter: true });
     console.log('🔄 Modelos sincronizados con la base de datos');
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });
   } catch (err) {
