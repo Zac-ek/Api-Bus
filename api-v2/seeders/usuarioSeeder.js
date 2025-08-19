@@ -8,8 +8,8 @@ export const seedUsuarios = async ({ models, personas, personasAdminIds = [] }) 
 
   // Admins fijos
   const adminCredsFijas = {
-    ADMIN001: { usuario: 'admin.carlos', correo: 'admin.carlos@demo.com', password: 'Admin#Carlos2025' },
-    ADMIN002: { usuario: 'admin.maria',  correo: 'admin.maria@demo.com',  password: 'Admin#Maria2025'  },
+    ADMIN001: { usuario: 'admin.edgar', correo: 'admin.edgar@demo.com', password: 'Admin#edgar2025' },
+    ADMIN002: { usuario: 'admin.zacek',  correo: 'admin.zacek@demo.com',  password: 'Admin#zacek2025'  },
   };
 
   for (const persona of personas) {
