@@ -44,7 +44,7 @@ export class ChoferesComponent {
     q: [''],
     turno: [''],
     estado: [''], // <- si tu template lo usa
-    rutaId: [null as number | null],
+    rutaId: [{ value: null, disabled: true }], // decorativo
     ratingMin: [0],
     sortBy: ['nombre' as 'nombre' | 'rating' | 'viajes'],
   });

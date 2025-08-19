@@ -5,7 +5,7 @@ import { HomeComponent } from './pages/home/home';
 import { BoletosComponent } from './pages/boletos/boletos'; // <-- NUEVO
 import { AdminLayoutComponent } from './layouts/admin/admin';
 import { DashboardComponent } from './pages/dashboard/dashboard';
-
+import { IngresosComponent } from './pages/ingresos/ingresos';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -34,6 +34,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/choferes/choferes').then((c) => c.ChoferesComponent),
       },
+      {path: 'ingresos', component: IngresosComponent },
     ],
   },
   { path: '**', redirectTo: 'home' },

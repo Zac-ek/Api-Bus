@@ -21,11 +21,24 @@ export interface UsuarioAPI {
 
 export interface ChoferAPI {
   id: number;
-  puesto?: string;
-  turno?: string;
-  fecha_ingreso?: string;
-  usuarioId?: number;
-  usuario?: UsuarioAPI;
+  puesto: string;
+  turno: string;
+  fecha_ingreso: string;
+  usuario?: {
+    id: number;
+    correo_electronico: string;
+    estado: string;
+    persona?: {
+      nombre: string;
+      primer_apellido: string;
+      segundo_apellido: string;
+      documento_identidad: string;
+      tipo: string;
+    };
+  };
+  // 🔹 nuevos que envía el back
+  en_servicio?: 0 | 1 | boolean;
+  viajes_mes?: number;
 }
 
 export interface ListaAPI<T> {
@@ -81,20 +94,22 @@ export class ChoferesService {
     return id % 2 === 0;
   }
 
-
   private toUI(t: ChoferAPI): ChoferUI {
     const p = t.usuario?.persona as any;
     const nombre = p
-      ? [p.nombre, p.primer_apellido, p.segundo_apellido].filter(Boolean).join(' ')
+      ? [p.nombre, p.primer_apellido, p.segundo_apellido]
+          .filter(Boolean)
+          .join(' ')
       : '—';
+
     return {
       id: t.id,
       nombre,
       estado: 'apto',
       calificacion: 4.0,
       rutaAsignada: null,
-      enServicio: false,
-      viajesMes: 0,
+      enServicio: Boolean(1),
+      viajesMes: Number(10),
       avatarUrl: null,
     };
   }
@@ -130,7 +145,7 @@ export class ChoferesService {
           items: (r.data ?? []).map((x) => this.toUI(x)),
           page: r.page ?? page,
           pages: r.pages ?? 1,
-          total: r.total ?? (r.data?.length ?? 0),
+          total: r.total ?? r.data?.length ?? 0,
           limit: r.limit ?? limit,
         })),
         catchError(() =>
@@ -140,12 +155,17 @@ export class ChoferesService {
   }
 
   /** Compat: si en algún lado sigues usando sin paginar */
-  listChoferes(params?: { puesto?: string; turno?: string; page?: number; limit?: number }): Observable<ChoferUI[]> {
+  listChoferes(params?: {
+    puesto?: string;
+    turno?: string;
+    page?: number;
+    limit?: number;
+  }): Observable<ChoferUI[]> {
     return this.listChoferesPaged(params).pipe(map((r) => r.items));
   }
 
   // (si tienes listRutas() aquí también)
-/*
+  /*
   listChoferes(params?: {
     puesto?: string;
     turno?: string;
@@ -199,6 +219,4 @@ export class ChoferesService {
       catchError(() => of([]))
     );
   }
-
-
 }

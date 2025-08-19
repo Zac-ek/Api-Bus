@@ -1,0 +1,129 @@
+/* === Paleta del tema oscuro que ya vienes usando === */
+:root {
+  --bg: #0b1220;
+  --bg-2: #0a1625;
+  --panel: #0e1b2c;
+  --panel-2: #0a1421;
+  --ink: #e6f0ff; /* texto principal */
+  --muted: #9fb3c8; /* texto secundario */
+  --blue: #3490ff; /* acento */
+  --blue2: #5aa9ff;
+  --border: rgba(110, 150, 200, 0.18);
+  --shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+  --rad: 14px;
+}
+
+/* Contenedor raíz del componente */
+:host {
+  display: block;
+  color: var(--ink);
+}
+
+/* Título de sección */
+h1,
+.sec-title {
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin: 8px 0 18px;
+}
+
+/* -------- KPIs -------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.kpi {
+  padding: 18px 20px;
+  border-radius: var(--rad);
+  border: 1px solid rgba(96, 140, 200, 0.28);
+  box-shadow: var(--shadow);
+  background: radial-gradient(
+      120% 140% at 0% 0%,
+      rgba(80, 130, 200, 0.16),
+      transparent 55%
+    ),
+    linear-gradient(180deg, rgba(16, 32, 54, 0.7), rgba(10, 20, 34, 0.95));
+  backdrop-filter: blur(6px);
+}
+
+.kpi .k-title {
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.kpi .k-value {
+  color: #fff;
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 900;
+  letter-spacing: 0.3px;
+}
+
+/* -------- Card / gráfica -------- */
+.card {
+  border-radius: var(--rad);
+  border: 1px solid rgba(94, 126, 199, 0.25);
+  box-shadow: var(--shadow);
+  background: radial-gradient(
+      80% 100% at 100% 0%,
+      rgba(40, 90, 160, 0.12),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(16, 32, 54, 0.9), rgba(10, 20, 34, 0.96));
+  padding: 14px 16px;
+}
+
+.card h3 {
+  color: #cfe2ff;
+  font-weight: 700;
+  margin: 4px 0 14px;
+}
+
+/* Altura cómoda para la gráfica */
+.chart-wrap {
+  height: 360px;
+  padding: 8px;
+}
+
+/* Opcional: mejora el contraste de las “tabs” de leyenda si las usas */
+.legend {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  color: #cfe2ff;
+}
+.legend .sw {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 6px;
+  display: inline-block;
+}
+.legend .ing {
+  background: #22c55e;
+}
+.legend .gas {
+  background: #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}
+
+.k-label{
+  color: white;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
