@@ -19,27 +19,27 @@ const run = async () => {
 
 
     // 1) Personas (con algunas tipo 'trabajador')
-    const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 40, 0.30);
+    // const { personas, personasTrabajadorIds } = await seedPersonas(ctx, 150000, 0.30);
 
-    // 2) Usuarios (1:1 con Persona) + mapa personaId -> usuario
-    const { usuarios, mapPersonaToUsuario } = await seedUsuarios({ ...ctx, personas }, 3);
+    // // 2) Usuarios (1:1 con Persona) + mapa personaId -> usuario
+    // const { usuarios, mapPersonaToUsuario } = await seedUsuarios({ ...ctx, personas }, 3);
 
-    // 3) Trabajadores solo para personas tipo 'trabajador'
-    const trabajadores = await seedTrabajadores(
-      { ...ctx, personasTrabajadorIds, mapPersonaToUsuario },
-      0.45 // ~45% conductores
-    );
+    // // 3) Trabajadores solo para personas tipo 'trabajador'
+    // const trabajadores = await seedTrabajadores(
+    //   { ...ctx, personasTrabajadorIds, mapPersonaToUsuario },
+    //   0.45 // ~45% conductores
+    // );
 
-    // 4) Autobuses con conductores válidos
-    const conductores = trabajadores.filter(t => t.puesto === 'conductor');
-    const autobuses = await seedAutobuses({ ...ctx, conductores }, 30);
+    // // 4) Autobuses con conductores válidos
+    // const conductores = trabajadores.filter(t => t.puesto === 'conductor');
+    // const autobuses = await seedAutobuses({ ...ctx, conductores }, 7000);
 
-    // 5) Rutas, horarios y boletos
-    const rutas = await seedRutas({ ...ctx, autobuses }, 28);
+    // // 5) Rutas, horarios y boletos
+    // const rutas = await seedRutas({ ...ctx, autobuses }, 60000);
     const horarios = await seedHorarios({ ...ctx, rutas }, 3);
 
 
-    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 3, 100, usuarios.length * 2);
+    await seedBoletos({ ...ctx, usuarios, rutas, autobuses, horarios }, 25, 7500, usuarios.length * 2);
 
     console.log('✅ Seed completo');
     process.exit(0);
