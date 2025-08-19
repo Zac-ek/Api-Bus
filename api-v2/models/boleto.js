@@ -15,8 +15,7 @@ const Boleto = sequelize.define(
     usuarioId: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: true,
-      references: { model: 'Usuarios', key: 'id' },
-      onUpdate: 'CASCADE',
+        onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
       field: 'usuario_id',
     },

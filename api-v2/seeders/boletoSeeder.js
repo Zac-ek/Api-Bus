@@ -18,7 +18,7 @@ export const seedBoletos = async (
   { models, usuarios, rutas, autobuses, horarios },
   maxPorUsuario = 3,      // 👈 tope por usuario
   nulosCada = 100,        // cada N, fecha_reservacion/asiento_numero = null
-  boletosTotales = Math.max(usuarios.length * 2, 50) // 👈 total deseado (ej. 2 por usuario)
+  boletosTotales = Math.max(usuarios.length * 2, 50) 
 ) => {
   const { Boleto } = models;
   const boletos = [];

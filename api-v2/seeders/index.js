@@ -20,7 +20,7 @@ const run = async () => {
     // 1) Personas (con algunas tipo 'trabajador')
     const { personas, personasTrabajadorIds } = await seedPersonas(
       ctx,
-      150000,
+      500,
       0.3
     );
 
@@ -40,17 +40,17 @@ const run = async () => {
 
     // 4) Autobuses con conductores válidos
     const conductores = trabajadores.filter((t) => t.puesto === "conductor");
-    const autobuses = await seedAutobuses({ ...ctx, conductores }, 7000);
+    const autobuses = await seedAutobuses({ ...ctx, conductores }, 700);
 
     // 5) Rutas, horarios y boletos
-    const rutas = await seedRutas({ ...ctx, autobuses }, 10000);
+    const rutas = await seedRutas({ ...ctx, autobuses }, 1000);
 
     const horarios = await seedHorarios({ ...ctx, rutas }, 3);
 
     await seedBoletos(
       { ...ctx, usuarios, rutas, autobuses, horarios },
       8,
-      7500,
+      700,
       usuarios.length * 2
     );
 
